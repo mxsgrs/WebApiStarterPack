@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿namespace Starter.WebApi.Models.Database;
 
-namespace Starter.WebApi.Models.Database;
-
-public partial class AdmxAccountContext : DbContext
+public partial class StarterContext : DbContext
 {
-    public AdmxAccountContext(DbContextOptions<AdmxAccountContext> options)
+    public StarterContext(DbContextOptions<StarterContext> options)
         : base(options)
     {
     }

@@ -6,11 +6,11 @@
 /// <param name="logger">Logging interface</param>
 /// <param name="dbContext">Database context</param>
 /// <param name="appContextAccessor">Application context</param>
-public class UserProfileService(ILogger<UserProfileService> logger, AdmxAccountContext dbContext,
+public class UserProfileService(ILogger<UserProfileService> logger, StarterContext dbContext,
     IAppContextAccessor appContextAccessor) : IUserProfileService
 {
     private readonly ILogger<UserProfileService> _logger = logger;
-    private readonly AdmxAccountContext _dbContext = dbContext;
+    private readonly StarterContext _dbContext = dbContext;
     private readonly IAppContextAccessor _appContextAccessor = appContextAccessor;
 
     /// <summary>

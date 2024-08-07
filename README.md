@@ -14,6 +14,49 @@ it is now recommended to implement business logic in what we call **services**.
 Once this is done, services can be injected in controllers but also in other services. Where previously the business logic contained in a
 controller was not accessible from another controller, we can now **share it everywhere** with a service.
 
+In this project services are declared in **DependencyInjectionSetup.cs**
+
+```csharp
+public static class DependencyInjectionSetup
+{
+    public static void AddStarterServices(this IServiceCollection services)
+    {
+        services.AddScoped<IUserCredentialsService, UserCredentialsService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IUserProfileService, UserProfileService>();
+    }
+}
+```
+
+This method is called in **Program.cs** like this `builder.Services.AddStarterServices();`
+
+### JWT authentication
+
+As JWT authentication is the standard **approach** to secure a web API, it's quite a good place to start. This project implements the whole process.
+- **Send your credentials with a post requests** to an anonymous endpoint and get your token in return. 
+- Now you can **access others endpoints** by adding this token to the authorization header of your HTTP requests.
+
+JWT authentication is declared in Program.cs as following.
+
+```csharp
+builder.Services.AddAuthentication()
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        Jwt jwt = builder.Configuration.GetRequiredSection("Jwt").Get<Jwt>()
+            ?? throw new Exception("JWT settings are not configured");
+
+        byte[] encodedKey = Encoding.ASCII.GetBytes(jwt.Key);
+        SymmetricSecurityKey symmetricSecurityKey = new(encodedKey);
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = jwt.Issuer,
+            ValidAudience = jwt.Audience,
+            IssuerSigningKey = symmetricSecurityKey
+        };
+    });
+```
+
 ### Mulitple configurations
 
 Maybe you need an application that has more than the usual Debug and Release configuration. Let's say you have a **custom configuration**
@@ -60,8 +103,9 @@ While Postman is really great, having a HTTP client with all your predefined req
 requests to your code in the version control. Hence when members of the team pull your code, they instantly have the possibility to test it with your 
 HTTP requests, saving time and making collaboration easier.
 
-HTTP requests are defined in .http files. Variables can be defined in the **http-client.env.json file**. Note that everytime this file is modified, 
-**closing and reopening** Visual Studio is needed so changes are taken into account. Examples for this project can be found in the **Https folder**.
+HTTP requests are defined in .http files. Variables, which are between double curly braces, can be defined in the **http-client.env.json file**. Note 
+that everytime this file is modified, **closing and reopening** Visual Studio is needed so changes are taken into account. Examples for this project 
+can be found in the **Https folder**.
 
 ```http
 POST {{HostAddress}}/Authentication/CreateJwtBearer
@@ -73,8 +117,18 @@ Content-Type: application/json
 }
 ```
 
+See official Microsoft documentation for more information [here](https://learn.microsoft.com/en-us/aspnet/core/test/http-files?view=aspnetcore-8.0).
+
 ### Unit tests
 
 This project comes with unit tests using the xUnit framework.
 
+### Global usings
+
+With the new feature `global using`, namespaces can be included for the whole project instead having to specify it in every file. This feature improve 
+maintainability and save time on repetitive tasks. Implementation can be found in **GlobalUsing.cs** file, inside each project root folder.
+
 ## Opening
+
+This project does not cover everything of course. It aim to provide the basics. Evolving to a Domain Driven Design is possibility or using it in a microservice
+environment is another one.

@@ -1,6 +1,4 @@
-﻿using FluentResults;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.IdentityModel.JsonWebTokens;
+﻿using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
@@ -14,7 +12,7 @@ namespace Starter.WebApi.Services;
 /// <param name="configuration">Application configuration</param>
 /// <param name="userCredentialsService">User credentials CRUD operations</param>
 public class AuthenticationService(ILogger<AuthenticationService> logger, IConfiguration configuration,
-    IUserCredentialsService userCredentialsService)
+    IUserCredentialsService userCredentialsService) : IAuthenticationService
 {
     private readonly ILogger<AuthenticationService> _logger = logger;
     private readonly IConfiguration _configuration = configuration;

@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text;
 using System.Text.Json.Serialization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -15,12 +18,14 @@ string configurationName = Assembly.GetExecutingAssembly()
 
 builder.Configuration.AddJsonFile($"appsettings.{configurationName}.json");
 
-// Add services to the container
-builder.Services.AddHttpContextAccessor();
-
-// Get database connection string
-string connectionString = builder.Configuration.GetConnectionString("AdmxAccount")
+// Read database connection string from application settings
+string connectionString = builder.Configuration.GetConnectionString("SqlServer")
     ?? throw new Exception("Connection string is missing");
+
+// Register database context as a service
+// Connect to database with connection string
+builder.Services.AddDbContext<StarterContext>(options =>
+        options.UseSqlServer(connectionString));
 
 // Add controllers and serialization
 builder.Services.AddControllers()
@@ -51,9 +56,32 @@ builder.Services.AddControllers()
         };
     });
 
-builder.Services.AddEndpointsApiExplorer();
+
+// Add services to the container
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddStarterServices();
 
+builder.Services.AddEndpointsApiExplorer();
+
+// Configure JWT authentication
+builder.Services.AddAuthentication()
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        Jwt jwt = builder.Configuration.GetRequiredSection("Jwt").Get<Jwt>()
+            ?? throw new Exception("JWT settings are not configured");
+
+        byte[] encodedKey = Encoding.ASCII.GetBytes(jwt.Key);
+        SymmetricSecurityKey symmetricSecurityKey = new(encodedKey);
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = jwt.Issuer,
+            ValidAudience = jwt.Audience,
+            IssuerSigningKey = symmetricSecurityKey
+        };
+    });
+
+// Read version number from application settings
 string version = builder.Configuration.GetValue<string>("Version")
     ?? throw new Exception("Version number is missing");
 
@@ -82,6 +110,7 @@ app.UseSwaggerUI(options =>
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

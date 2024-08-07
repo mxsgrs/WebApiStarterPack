@@ -1,6 +1,5 @@
-﻿namespace Starter.WebApi.Controllers
+﻿namespace Starter.WebApi.Controllers;
+
+public class UserController
 {
-    public class UserController
-    {
-    }
 }

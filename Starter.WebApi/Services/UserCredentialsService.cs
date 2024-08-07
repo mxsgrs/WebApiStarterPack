@@ -5,11 +5,11 @@
 /// </summary>
 /// <param name="logger"></param>
 /// <param name="dbContext"></param>
-public class UserCredentialsService(ILogger<UserCredentialsService> logger, AdmxAccountContext dbContext,
+public class UserCredentialsService(ILogger<UserCredentialsService> logger, StarterContext dbContext,
     IAppContextAccessor appContextAccessor) : IUserCredentialsService
 {
     private readonly ILogger<UserCredentialsService> _logger = logger;
-    private readonly AdmxAccountContext _dbContext = dbContext;
+    private readonly StarterContext _dbContext = dbContext;
     private readonly IAppContextAccessor _appContextAccessor = appContextAccessor;
 
     /// <summary>

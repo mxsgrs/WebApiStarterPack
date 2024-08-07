@@ -11,7 +11,7 @@ public class StarterControllerBase(IMapper mapper) : ControllerBase
     private readonly IMapper _mapper = mapper;
 
     /// <summary>
-    /// Return fluent result with corresponding HTTP status
+    /// HTTP status based on fluent result
     /// </summary>
     /// <param name="result">CRUD operation result for example</param>
     /// <returns>API response</returns>
@@ -28,11 +28,11 @@ public class StarterControllerBase(IMapper mapper) : ControllerBase
     }
 
     /// <summary>
-    /// Return fluent result with corresponding HTTP status
+    /// HTTP status based on <typeparamref name="T"/> fluent result
     /// </summary>
     /// <typeparam name="T">Result's type</typeparam>
     /// <param name="result">CRUD operation result for example</param>
-    /// <returns>API response</returns>
+    /// <returns><typeparamref name="T"/> typed result</returns>
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
     public IActionResult CorrespondingStatus<T>(Result<T> result)
@@ -46,12 +46,12 @@ public class StarterControllerBase(IMapper mapper) : ControllerBase
     }
 
     /// <summary>
-    /// Return fluent result DTO with corresponding HTTP status
+    /// HTTP status based on <typeparamref name="T"/> fluent result
     /// </summary>
     /// <typeparam name="T">Result's type</typeparam>
     /// <typeparam name="Y">DTO's type</typeparam>
     /// <param name="result">CRUD operation result for example</param>
-    /// <returns>API response DTO</returns>
+    /// <returns><typeparamref name="Y"/> typed result</returns>
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
     public IActionResult CorrespondingStatus<T, Y>(Result<T> result)

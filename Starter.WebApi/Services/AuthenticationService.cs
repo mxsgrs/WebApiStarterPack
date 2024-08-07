@@ -14,7 +14,7 @@ namespace Starter.WebApi.Services;
 /// <param name="configuration">Application configuration</param>
 /// <param name="userCredentialsService">User credentials CRUD operations</param>
 public class AuthenticationService(ILogger<AuthenticationService> logger, IConfiguration configuration,
-    IUserCredentialsService userCredentialsService) : IAuthenticationService
+    IUserCredentialsService userCredentialsService)
 {
     private readonly ILogger<AuthenticationService> _logger = logger;
     private readonly IConfiguration _configuration = configuration;

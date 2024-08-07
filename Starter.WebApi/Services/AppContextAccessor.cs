@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Starter.WebApi.Models.Authentication;
-using Starter.WebApi.Services.Interfaces;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace Starter.WebApi.Services;
@@ -11,7 +8,7 @@ namespace Starter.WebApi.Services;
 /// </summary>
 /// <param name="httpContext"></param>
 /// <param name="actionContextAccessor"></param>
-public class AppContextAcessor(IHttpContextAccessor httpContext) : IAppContextAcessor
+public class AppContextAccessor(IHttpContextAccessor httpContext) : IAppContextAccessor
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContext;
 

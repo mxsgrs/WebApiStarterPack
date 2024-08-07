@@ -30,4 +30,8 @@
     <Folder Include="Facts\Files\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Starter.WebApi\Starter.WebApi.csproj" />
+  </ItemGroup>
+
 </Project>

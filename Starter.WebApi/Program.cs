@@ -62,8 +62,8 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc(version, new OpenApiInfo
     {
         Version = version,
-        Title = "Admx.Account.WebApi",
-        Description = "Access to Admx services."
+        Title = "Starter.WebApi",
+        Description = "Get your starter web API."
     });
 });
 
@@ -71,13 +71,13 @@ WebApplication app = builder.Build();
 
 app.UseSwagger(options =>
 {
-    options.RouteTemplate = "account/swagger/{documentname}/swagger.json";
+    options.RouteTemplate = "swagger/{documentname}/swagger.json";
 });
 
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint($"/account/swagger/{version}/swagger.json", version);
-    options.RoutePrefix = "account/swagger";
+    options.SwaggerEndpoint($"/swagger/{version}/swagger.json", version);
+    options.RoutePrefix = "swagger";
 });
 
 app.UseHttpsRedirection();

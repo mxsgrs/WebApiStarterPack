@@ -11,6 +11,6 @@ public static class DependencyInjectionSetup
     /// <param name="services">Application service collection</param>
     public static void AddStarterServices(this IServiceCollection services)
     {
-        services.AddScoped<IEstimateService, EstimateService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
     }
 }

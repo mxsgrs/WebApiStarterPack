@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starter.WebApi", "Starter.WebApi\Starter.WebApi.csproj", "{78A4C710-CA02-406A-B550-26CF5DC3533E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.WebApi", "Starter.WebApi\Starter.WebApi.csproj", "{78A4C710-CA02-406A-B550-26CF5DC3533E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starter.WebApi.Tests", "Starter.WebApi.Tests\Starter.WebApi.Tests.csproj", "{A9EB1918-662F-4098-AA38-5233B694A4FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.WebApi.Tests", "Starter.WebApi.Tests\Starter.WebApi.Tests.csproj", "{A9EB1918-662F-4098-AA38-5233B694A4FE}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{270C8FB5-C647-4EDC-B277-B9915829F668}"
 EndProject

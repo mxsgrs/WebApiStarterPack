@@ -2,8 +2,7 @@
 
 ## Introduction
 
-New to .NET 8? Or maybe new to .NET at all? This project implements a web API with ASP.NET Core 8 with the most common features.
-It is paired with a SQL Server database and a Redis cache.
+This project implements a web API with ASP.NET Core 8 with the most common features. It is paired with a SQL Server database and a Redis cache.
 
 ## Features
 
@@ -54,5 +53,28 @@ public async Task<Result<UserCredentials>> Read(long id)
     return Result.Ok(userCredentials);
 }
 ```
+
+### HTTP files
+
+While Postman is really great, having a HTTP client with all your predefined requests inside your project is such a handy tool. It allows to bind those
+requests to your code in the version control. Hence when members of the team pull your code, they instantly have the possibility to test it with your 
+HTTP requests, saving time and making collaboration easier.
+
+HTTP requests are defined in .http files. Variables can be defined in the **http-client.env.json file**. Note that everytime this file is modified, 
+**closing and reopening** Visual Studio is needed so changes are taken into account. Examples for this project can be found in the **Https folder**.
+
+```http
+POST {{HostAddress}}/Authentication/CreateJwtBearer
+Content-Type: application/json
+
+{
+  "emailAddress": "robert.durand@gmail.com",
+  "hashedPassword": "369b62d459de8a74683f87c276ff8a264d6b247add4beaa02a1c7f9f3134f495"
+}
+```
+
+### Unit tests
+
+This project comes with unit tests using the xUnit framework.
 
 ## Opening

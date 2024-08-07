@@ -1,0 +1,19 @@
+﻿
+# Create a new user
+POST {{HostAddress}}/UserProfile/CreateOrUpdate
+Content-Type: application/json
+Authorization: Bearer {{Jwt}}
+
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "emailAddress": "robert.durand@gmail.com"
+}
+
+###
+
+# Read token user
+GET {{HostAddress}}/UserProfile/Read
+Authorization: Bearer {{Jwt}}
+
+###

@@ -37,7 +37,6 @@ namespace Starter.WebApi.Migrations
                     Birthday = table.Column<DateOnly>(type: "date", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Position = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    EmailAddress = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     PersonalPhone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ProfessionalPhone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     PostalAddress = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),

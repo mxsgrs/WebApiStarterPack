@@ -99,12 +99,30 @@ public async Task<Result<UserCredentials>> Read(long id)
 
 ### HTTP files
 
-While Postman is really great, having a HTTP client with all your predefined requests **inside your project** is such a handy tool. It allows to bind your code to those requests **in the version control**. Hence when members of the team pull your code, they instantly have the possibility to test it with your 
-HTTP requests, saving time and making collaboration easier.
+While Postman is really great, having a HTTP client with all your predefined requests **inside your project** is such a handy tool. It allows to 
+bind your code to those requests **in the version control**. Hence when members of the team pull your code, they instantly have the possibility 
+to test it with your HTTP requests, saving time and making collaboration easier.
 
-HTTP requests are defined in .http files. Variables, which are between double curly braces, can be defined in the **http-client.env.json file**. Note 
-that everytime this file is modified, **closing and reopening** Visual Studio is needed so changes are taken into account. Examples for this project 
-can be found in the **Https folder**.
+Variables, which are between double curly braces, can be defined in the **http-client.env.json file**. Multiple
+environments can be configured, making possible to attribute a different value to a variable for each environment. Then it is easy to switch between environment
+with the same request, making the workflow even faster. Note that everytime this file is modified, **closing and reopening** Visual Studio is needed so changes 
+are taken into account. I hope Microsoft will fix this in the future.
+
+```json
+{
+  "dev": {
+    "HostAddress": "https://localhost:7137",
+    "Jwt": "xxx.yyy.zzz"
+  },
+  "prod": {
+    "HostAddress": "https://starterwebapi.com",
+    "Jwt": "xxx.yyy.zzz"
+  }
+}
+```
+
+HTTP requests are defined in .http files. Examples for this project can be found in the **Https** folder. Each file corresponds to a controller. There 
+a still some limitations, it is not possible to add pre-request or post-response scripts like in Postman, but again this feature is young and will grow.
 
 ```http
 POST {{HostAddress}}/Authentication/CreateJwtBearer

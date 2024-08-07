@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Starter.WebApi.Controllers;
 
@@ -15,6 +16,7 @@ public class UserCredentialsController(IUserCredentialsService userCredentialsSe
     /// </summary>
     /// <param name="userCredentials">User's login and password</param>
     /// <returns>User credentials information</returns>
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> CreateOrUpdate(UserCredentials userCredentials)
     {
@@ -29,9 +31,9 @@ public class UserCredentialsController(IUserCredentialsService userCredentialsSe
     /// <param name="id">User credentials identifier</param>
     /// <returns>User credentials information</returns>
     [HttpGet]
-    public async Task<IActionResult> Read(long id)
+    public async Task<IActionResult> Read()
     {
-        Result<UserCredentials> result  = await _userCredentialsService.Read(id);
+        Result<UserCredentials> result  = await _userCredentialsService.Read();
 
         return CorrespondingStatus(result);
     }

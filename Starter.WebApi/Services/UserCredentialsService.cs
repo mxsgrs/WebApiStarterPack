@@ -51,10 +51,11 @@ public class UserCredentialsService(ILogger<UserCredentialsService> logger, Star
     /// <summary>
     /// Query <see cref="UserCredentials"/> entity based on id
     /// </summary>
-    /// <param name="id">User credentials identifier</param>
     /// <returns>Credentials present in the database</returns>
-    public async Task<Result<UserCredentials>> Read(long id)
+    public async Task<Result<UserCredentials>> Read()
     {
+        long id = _appContextAccessor.UserClaims.UserCredentialsId;
+
         UserCredentials? userCredentials = await _dbContext.UserCredentials
             .FirstOrDefaultAsync(item => item.Id == id);
 

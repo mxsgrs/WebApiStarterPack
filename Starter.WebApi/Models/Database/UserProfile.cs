@@ -22,9 +22,6 @@ public partial class UserProfile
     [StringLength(255)]
     public string? Position { get; set; }
 
-    [StringLength(255)]
-    public string? EmailAddress { get; set; }
-
     [StringLength(100)]
     public string? PersonalPhone { get; set; }
 

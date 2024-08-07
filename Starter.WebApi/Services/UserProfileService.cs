@@ -30,6 +30,7 @@ public class UserProfileService(ILogger<UserProfileService> logger, StarterConte
             _logger.LogInformation("Creating user {UserProfile}", userProfile);
 
             // Exclude important fields and update the rest
+            userProfile.UserCredentialsId = userCredentialsId;
             _dbContext.UserProfile?.Add(userProfile);
             _dbContext.SaveChanges();
 
@@ -44,7 +45,6 @@ public class UserProfileService(ILogger<UserProfileService> logger, StarterConte
             oldUserProfile.Birthday = userProfile.Birthday;
             oldUserProfile.City = userProfile.City;
             oldUserProfile.Country = userProfile.Country;
-            oldUserProfile.EmailAddress = userProfile.EmailAddress;
             oldUserProfile.FirstName = userProfile.FirstName;
             oldUserProfile.Gender = userProfile.Gender;
             oldUserProfile.LastName = userProfile.LastName;

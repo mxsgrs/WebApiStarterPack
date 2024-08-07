@@ -6,8 +6,7 @@ Authorization: Bearer {{Jwt}}
 
 {
   "firstName": "Jane",
-  "lastName": "Doe",
-  "emailAddress": "robert.durand@gmail.com"
+  "lastName": "Doe"
 }
 
 ###
@@ -15,5 +14,3 @@ Authorization: Bearer {{Jwt}}
 # Read token user
 GET {{HostAddress}}/UserProfile/Read
 Authorization: Bearer {{Jwt}}
-
-###

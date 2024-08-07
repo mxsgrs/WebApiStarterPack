@@ -12,7 +12,7 @@ using Starter.WebApi.Models.Database;
 namespace Starter.WebApi.Migrations
 {
     [DbContext(typeof(StarterContext))]
-    [Migration("20240807195323_InitialCreate")]
+    [Migration("20240807205632_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -74,10 +74,6 @@ namespace Starter.WebApi.Migrations
                     b.Property<string>("Country")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("EmailAddress")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(100)

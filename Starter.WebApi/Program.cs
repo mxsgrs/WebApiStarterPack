@@ -35,6 +35,8 @@ builder.Services.AddControllers()
     })
     .ConfigureApiBehaviorOptions(options =>
     {
+        options.SuppressModelStateInvalidFilter = true;
+
         var builtInFactory = options.InvalidModelStateResponseFactory;
         options.InvalidModelStateResponseFactory = context =>
         {

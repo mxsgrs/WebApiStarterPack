@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project implements a web API with ASP.NET Core 8 with the most common features. It is paired with a SQL Server database and a Redis cache.
+This project implements a web API with ASP.NET Core 8 with the most common features. It is paired with a SQL Server database using a code first approach.
 
 ## Features
 
@@ -72,7 +72,7 @@ appsettings.Custom.json and so on.
 ```csharp
 string configurationName = Assembly.GetExecutingAssembly()
     .GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration
-        ?? throw new Exception("Configuration settings are missing");
+        ?? throw new Exception("Can not read configuration name");
 
 builder.Configuration.AddJsonFile($"appsettings.{configurationName}.json");
 ```
@@ -99,8 +99,7 @@ public async Task<Result<UserCredentials>> Read(long id)
 
 ### HTTP files
 
-While Postman is really great, having a HTTP client with all your predefined requests inside your project is such a handy tool. It allows to bind those
-requests to your code in the version control. Hence when members of the team pull your code, they instantly have the possibility to test it with your 
+While Postman is really great, having a HTTP client with all your predefined requests **inside your project** is such a handy tool. It allows to bind your code to those requests **in the version control**. Hence when members of the team pull your code, they instantly have the possibility to test it with your 
 HTTP requests, saving time and making collaboration easier.
 
 HTTP requests are defined in .http files. Variables, which are between double curly braces, can be defined in the **http-client.env.json file**. Note 
@@ -119,9 +118,34 @@ Content-Type: application/json
 
 See official Microsoft documentation for more information [here](https://learn.microsoft.com/en-us/aspnet/core/test/http-files?view=aspnetcore-8.0).
 
-### Unit tests
+### Logging
 
-This project comes with unit tests using the xUnit framework.
+The most common error when developing a web API is to post an **invalid object** and get a **bad request** response in return. When this happens the developer 
+needs to investigate the **ModelState**, but it can be a long and painful process. Fortunately, it is now possible to see the **relevant details** and 
+particularly which **property of the object** is causing the invalid state by adding this.
+
+```csharp
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        var builtInFactory = options.InvalidModelStateResponseFactory;
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            ILogger<Program> logger = context.HttpContext.RequestServices
+                .GetRequiredService<ILogger<Program>>();
+
+            IEnumerable<ModelError> errors = context.ModelState.Values
+                .SelectMany(item => item.Errors);
+
+            foreach (ModelError error in errors)
+            {
+                logger.LogError("{ErrorMessage}", error.ErrorMessage);
+            }
+
+            return builtInFactory(context);
+        };
+    });
+```
 
 ### Global usings
 
@@ -130,5 +154,5 @@ maintainability and save time on repetitive tasks. Implementation can be found i
 
 ## Opening
 
-This project does not cover everything of course. It aim to provide the basics. Evolving to a Domain Driven Design is possibility or using it in a microservice
-environment is another one.
+This project does not cover everything of course. It aims to provide the basics and get you going quickly, so you can dive into more complex structure 
+faster. Evolving to a Domain Driven Design is possibility or using it in a microservice environment is another one.

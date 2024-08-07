@@ -14,7 +14,7 @@ JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 // Add specific configuration file for the current build configuration
 string configurationName = Assembly.GetExecutingAssembly()
     .GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration
-        ?? throw new Exception("Configuration settings are missing");
+        ?? throw new Exception("Can not read configuration name");
 
 builder.Configuration.AddJsonFile($"appsettings.{configurationName}.json");
 
@@ -35,8 +35,6 @@ builder.Services.AddControllers()
     })
     .ConfigureApiBehaviorOptions(options =>
     {
-        options.SuppressModelStateInvalidFilter = true;
-
         var builtInFactory = options.InvalidModelStateResponseFactory;
         options.InvalidModelStateResponseFactory = context =>
         {

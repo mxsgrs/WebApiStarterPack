@@ -1,12 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
 
-namespace Starter.WebApi.Tests.Facts.Fixtures
+namespace Starter.WebApi.Tests.Facts.Fixtures;
+
+public class SharedFixture
 {
-    internal class SharedFixture
+    public readonly IConfigurationRoot Configuration;
+    public readonly IAppContextAccessor AppContextAccessor;
+
+    public SharedFixture()
     {
+        Configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json").Build();
+
+        AppContextAccessor = new MockContextAccessor();
+    }
+
+    private class MockContextAccessor : IAppContextAccessor
+    {
+        public UserClaims UserClaims { get; set; } = new()
+        {
+            UserCredentialsId = 1
+        };
+    }
+
+    public static StarterContext CreateDatabaseContext()
+    {
+        DbContextOptions<StarterContext> options = new DbContextOptionsBuilder<StarterContext>()
+            .ConfigureWarnings(warning => warning.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+
+        return new StarterContext(options);
+    }
+
+    public static string ReadLocalJson(string relativePath)
+    {
+        string currentDirectory = Directory.GetCurrentDirectory();
+        string path = $"{currentDirectory}{relativePath}";
+        string json = string.Empty;
+
+        if (File.Exists(path))
+        {
+            json = File.ReadAllText(path);
+        }
+
+        return json;
     }
 }

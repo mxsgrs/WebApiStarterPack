@@ -9,12 +9,12 @@ namespace Starter.WebApi.Controllers.Abstracts;
 [ApiController]
 [Authorize]
 [Route("[controller]/[action]")]
-public class StarterController : ControllerBase
+public class StarterControllerBase : ControllerBase
 {
     /// <summary>
     /// Return fluent result with corresponding HTTP status
     /// </summary>
-    /// <param name="result"></param>
+    /// <param name="result">CRUD operation result for example</param>
     /// <returns>API response</returns>
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
@@ -31,8 +31,8 @@ public class StarterController : ControllerBase
     /// <summary>
     /// Return fluent result with corresponding HTTP status
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="result"></param>
+    /// <typeparam name="T">Result's type</typeparam>
+    /// <param name="result">CRUD operation result for example</param>
     /// <returns>API response</returns>
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]

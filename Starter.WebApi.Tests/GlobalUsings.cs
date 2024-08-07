@@ -1,12 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Starter.WebApi.Tests
-{
-    internal class GlobalUsings
-    {
-    }
-}
+﻿global using Starter.WebApi.Models.Authentication;
+global using Starter.WebApi.Models.Database;
+global using Starter.WebApi.Services.Interfaces;

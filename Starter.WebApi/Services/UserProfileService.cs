@@ -18,12 +18,12 @@ public class UserProfileService(ILogger<UserProfileService> logger, StarterConte
     /// </summary>
     /// <param name="userProfile"></param>
     /// <returns>Updated user profile</returns>
-    public Task<UserProfile?> CreateOrUpdate(UserProfile userProfile)
+    public async Task<Result<UserProfile>> CreateOrUpdate(UserProfile userProfile)
     {
         long userCredentialsId = _appContextAccessor.UserClaims.UserCredentialsId;
 
-        UserProfile? oldUserProfile = _dbContext.UserProfile?
-            .FirstOrDefault(profile => profile.UserCredentialsId == userCredentialsId);
+        UserProfile? oldUserProfile = await _dbContext.UserProfile
+            .FirstOrDefaultAsync(profile => profile.UserCredentialsId == userCredentialsId);
 
         if (oldUserProfile is null)
         {
@@ -34,7 +34,7 @@ public class UserProfileService(ILogger<UserProfileService> logger, StarterConte
             _dbContext.UserProfile?.Add(userProfile);
             _dbContext.SaveChanges();
 
-            return Task.FromResult<UserProfile?>(userProfile);
+            return Result.Ok(userProfile);
         }
         else
         {
@@ -56,7 +56,7 @@ public class UserProfileService(ILogger<UserProfileService> logger, StarterConte
             oldUserProfile.ZipCode = userProfile.ZipCode;
             _dbContext.SaveChanges();
 
-            return Task.FromResult<UserProfile?>(oldUserProfile);
+            return Result.Ok(oldUserProfile);
         }
     }
 
@@ -64,15 +64,20 @@ public class UserProfileService(ILogger<UserProfileService> logger, StarterConte
     /// Read a user informations
     /// </summary>
     /// <returns>Existing user profile</returns>
-    public Task<UserProfile?> Read()
+    public async Task<Result<UserProfile>> Read()
     {
         long userCredentialsId = _appContextAccessor.UserClaims.UserCredentialsId;
 
-        UserProfile? userProfile = _dbContext.UserProfile
-            .FirstOrDefault(item => item.UserCredentialsId == userCredentialsId);
+        UserProfile? userProfile = await _dbContext.UserProfile
+            .FirstOrDefaultAsync(item => item.UserCredentialsId == userCredentialsId);
+
+        if (userProfile is null)
+        {
+            return Result.Fail("User profile was not found");
+        }
 
         _logger.LogInformation("Reading user profile {UserProfile}", userProfile);
 
-        return Task.FromResult(userProfile);
+        return Result.Ok(userProfile);
     }
 }

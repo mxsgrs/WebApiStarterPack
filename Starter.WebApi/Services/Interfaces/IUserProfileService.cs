@@ -1,8 +1,7 @@
-﻿namespace Starter.WebApi.Services.Interfaces
+﻿namespace Starter.WebApi.Services.Interfaces;
+
+public interface IUserProfileService
 {
-    public interface IUserProfileService
-    {
-        Task<UserProfile?> CreateOrUpdate(UserProfile userProfile);
-        Task<UserProfile?> Read();
-    }
+    Task<Result<UserProfile>> CreateOrUpdate(UserProfile userProfile);
+    Task<Result<UserProfile>> Read();
 }

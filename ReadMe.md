@@ -97,6 +97,8 @@ public async Task<Result<UserCredentials>> Read(long id)
 }
 ```
 
+Another positive aspect is to avoid returning null objects which make the application prone to null exceptions.
+
 ### HTTP files
 
 While Postman is really great, having a HTTP client with all your predefined requests **inside your project** is such a handy tool. It allows to 
@@ -140,7 +142,7 @@ See official Microsoft documentation for more information [here](https://learn.m
 
 The most common error when developing a web API is to post an **invalid object** and get a **bad request** response in return. When this happens the developer 
 needs to investigate the **ModelState**, but it can be a long and painful process. Fortunately, it is now possible to see the **relevant details** and 
-particularly which **property of the object** is causing the invalid state by adding this.
+particularly which **object property** is causing the invalid state.
 
 ```csharp
 builder.Services.AddControllers()

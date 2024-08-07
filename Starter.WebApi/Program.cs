@@ -27,16 +27,18 @@ string connectionString = builder.Configuration.GetConnectionString("SqlServer")
 builder.Services.AddDbContext<StarterContext>(options =>
         options.UseSqlServer(connectionString));
 
+// AutoMapper for database models and DTOs mapping
+Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+builder.Services.AddAutoMapper(assemblies);
+
 // Add controllers and serialization
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        //options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     })
     .ConfigureApiBehaviorOptions(options =>
     {
-        options.SuppressModelStateInvalidFilter = true;
-
         var builtInFactory = options.InvalidModelStateResponseFactory;
         options.InvalidModelStateResponseFactory = context =>
         {

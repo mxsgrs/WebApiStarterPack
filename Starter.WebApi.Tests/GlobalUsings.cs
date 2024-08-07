@@ -1,3 +1,9 @@
-﻿global using Starter.WebApi.Models.Authentication;
+﻿global using AutoMapper;
+global using FluentResults;
+global using Microsoft.AspNetCore.Mvc;
+global using Moq;
+global using Starter.WebApi.Controllers;
+global using Starter.WebApi.Models.Authentication;
 global using Starter.WebApi.Models.Database;
 global using Starter.WebApi.Services.Interfaces;
+global using Starter.WebApi.Tests.Facts.Fixtures;

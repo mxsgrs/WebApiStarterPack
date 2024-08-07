@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Starter.WebApi.Controllers;
+﻿namespace Starter.WebApi.Controllers;
 
 /// <summary>
 /// Handle authentication processes
 /// </summary>
-/// <param name="authenticationService"></param>
-public class AuthenticationController(IAuthenticationService authenticationService) : StarterControllerBase
+/// <param name="authenticationService">Authentication operations</param>
+/// <param name="mapper">AutoMapper service</param>
+public class AuthenticationController(IAuthenticationService authenticationService, IMapper mapper) 
+    : StarterControllerBase(mapper)
 {
     private readonly IAuthenticationService _authenticationService = authenticationService;
 

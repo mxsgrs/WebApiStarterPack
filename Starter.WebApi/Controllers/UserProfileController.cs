@@ -1,26 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Starter.WebApi.Controllers;
+﻿namespace Starter.WebApi.Controllers;
 
 /// <summary>
 /// Handle the application users
 /// </summary>
-/// <param name="userProfileService"></param>
-public class UserProfileController(IUserProfileService userProfileService) : StarterControllerBase
+/// <param name="userProfileService">User profile CRUD operations</param>
+/// <param name="mapper">AutoMapper service</param>
+public class UserProfileController(IUserProfileService userProfileService, IMapper mapper) : StarterControllerBase(mapper)
 {
     private readonly IUserProfileService _userProfileService = userProfileService;
+    private readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// Create or update user information
     /// </summary>
-    /// <param name="userProfile"></param>
+    /// <param name="userProfileDto">User profile information</param>
     /// <returns>User new information</returns>
     [HttpPost]
-    public async Task<IActionResult> CreateOrUpdate(UserProfile userProfile)
+    public async Task<IActionResult> CreateOrUpdate(UserProfileDto userProfileDto)
     {
-        UserProfile? newUserProfile = await _userProfileService.CreateOrUpdate(userProfile);
+        UserProfile userProfile = _mapper.Map<UserProfile>(userProfileDto);
 
-        return Ok(newUserProfile);
+        Result<UserProfile> result = await _userProfileService.CreateOrUpdate(userProfile);
+
+        return CorrespondingStatus<UserProfile, UserProfileDto>(result);
     }
 
     /// <summary>
@@ -30,8 +32,8 @@ public class UserProfileController(IUserProfileService userProfileService) : Sta
     [HttpGet]
     public async Task<IActionResult> Read()
     {
-        UserProfile? userProfile = await _userProfileService.Read();
+        Result<UserProfile> result = await _userProfileService.Read();
 
-        return Ok(userProfile);
+        return CorrespondingStatus<UserProfile, UserProfileDto>(result);
     }
 }

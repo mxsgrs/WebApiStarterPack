@@ -9,42 +9,44 @@ public partial class UserProfile
     public long Id { get; set; }
 
     [StringLength(100)]
-    public string? FirstName { get; set; }
+    public string FirstName { get; set; } = string.Empty;
 
     [StringLength(100)]
-    public string? LastName { get; set; }
+    public string LastName { get; set; } = string.Empty;
 
-    public DateOnly? Birthday { get; set; }
+    public DateOnly Birthday { get; set; }
 
     [StringLength(20)]
-    public string? Gender { get; set; }
+    public string Gender { get; set; } = string.Empty;
 
     [StringLength(255)]
     public string? Position { get; set; }
 
     [StringLength(100)]
-    public string? PersonalPhone { get; set; }
+    [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "The phone number must be between 10 and 15 digits and may include a leading +.")]
+    public string PersonalPhone { get; set; } = string.Empty;
 
     [StringLength(100)]
+    [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "The phone number must be between 10 and 15 digits and may include a leading +.")]
     public string? ProfessionalPhone { get; set; }
 
     [StringLength(255)]
-    public string? PostalAddress { get; set; }
+    public string PostalAddress { get; set; } = string.Empty;
 
     [StringLength(255)]
     public string? AddressSupplement { get; set; }
 
     [StringLength(100)]
-    public string? City { get; set; }
+    public string City { get; set; } = string.Empty;
 
     [StringLength(20)]
-    public string? ZipCode { get; set; }
+    public string ZipCode { get; set; } = string.Empty;
 
     [StringLength(100)]
     public string? StateProvince { get; set; }
 
     [StringLength(100)]
-    public string? Country { get; set; }
+    public string Country { get; set; } = string.Empty;
 
     public long UserCredentialsId { get; set; }
 

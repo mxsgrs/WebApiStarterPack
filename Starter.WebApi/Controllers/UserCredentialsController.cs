@@ -1,40 +1,41 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Starter.WebApi.Controllers;
+﻿namespace Starter.WebApi.Controllers;
 
 /// <summary>
 /// Handle user credentials
 /// </summary>
 /// <param name="userCredentialsService">User credentials CRUD operations</param>
-public class UserCredentialsController(IUserCredentialsService userCredentialsService) : StarterControllerBase
+/// <param name="mapper">AutoMapper service</param>
+public class UserCredentialsController(IUserCredentialsService userCredentialsService, IMapper mapper) 
+    : StarterControllerBase(mapper)
 {
     private readonly IUserCredentialsService _userCredentialsService = userCredentialsService;
+    private readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// Create or update user credentials
     /// </summary>
-    /// <param name="userCredentials">User's login and password</param>
+    /// <param name="userCredentialsDto">User's login and password</param>
     /// <returns>User credentials information</returns>
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> CreateOrUpdate(UserCredentials userCredentials)
+    public async Task<IActionResult> CreateOrUpdate(UserCredentialsDto userCredentialsDto)
     {
+        UserCredentials userCredentials = _mapper.Map<UserCredentials>(userCredentialsDto);
+
         Result<UserCredentials> result = await _userCredentialsService.CreateOrUpdate(userCredentials);
 
-        return CorrespondingStatus(result);
+        return CorrespondingStatus<UserCredentials, UserCredentialsDto>(result);
     }
 
     /// <summary>
     /// Read user credentials
     /// </summary>
-    /// <param name="id">User credentials identifier</param>
     /// <returns>User credentials information</returns>
     [HttpGet]
     public async Task<IActionResult> Read()
     {
         Result<UserCredentials> result  = await _userCredentialsService.Read();
 
-        return CorrespondingStatus(result);
+        return CorrespondingStatus<UserCredentials, UserCredentialsDto>(result);
     }
 }

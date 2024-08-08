@@ -42,13 +42,22 @@ public static class DependencyInjectionSetup
 }
 ```
 
-This method is called in **Program.cs** like this `builder.Services.AddStarterServices();`
+This method is called in **Program.cs** like this `builder.Services.AddStarterServices()`. Once this is done, services are available in all controllers and
+services like in the following examples.
+
+```csharp
+public class AuthenticationController(IAuthenticationService authenticationService, IMapper mapper)
+    : StarterControllerBase(mapper)
+
+public class AuthenticationService(ILogger<AuthenticationService> logger, IConfiguration configuration,
+    IUserCredentialsService userCredentialsService) : IAuthenticationService
+```
 
 ### JWT authentication
 
 As JWT authentication is the standard **approach** to secure a web API, it's quite a good place to start. This project implements the whole process.
-- **Send your credentials with a post requests** to an anonymous endpoint and get your token in return. 
-- Now you can **access others endpoints** by adding this token to the authorization header of your HTTP requests.
+- **Send your credentials with a post requests** to an endpoint of **AuthenticationController** and get a token. 
+- Now **secured endpoints** can be accessed by adding this token to the **authorization header** of a HTTP requests.
 
 JWT authentication is declared in Program.cs as following.
 
@@ -78,10 +87,10 @@ for one of your clients. We will call this configuration Custom. That being said
 create an **appsettings.Custom.json file**. Now you expect the application to use these settings when you **publish** it with the Custom configuration.
 
 But this is not how .NET works. No matter what configuration you select during publishing, the application will look for **appsettings.environmentName.json**
-during its execution. For example appsettings.Development.json or appsettings.Production.json for respectively Debug and Release configuration.
+during its execution. For example **appsettings.Development.json** or **appsettings.Production.json** for respectively **Debug** and **Release** configuration.
 
 This project has code in Program.cs to **handle this situation**. Hence if you publish your application with Custom configuration, it will look for
-appsettings.Custom.json and so on.
+**appsettings.Custom.json** and so on.
 
 ```csharp
 string configurationName = Assembly.GetExecutingAssembly()
@@ -94,7 +103,8 @@ builder.Configuration.AddJsonFile($"appsettings.{configurationName}.json");
 ### Result pattern
 
 As **throwing exception is not right way** to handle unexpected behaviour, we prefer to return an error instead. This can be done using what
-is called the **result pattern**. In this project I am using the **FluentResults** nuget package to implement this pattern.
+is called the **result pattern**. In this project I am using the **FluentResults** nuget package to implement this pattern. Here is an **example**
+of how this pattern is implemented.
 
 ```csharp
 public async Task<Result<UserCredentials>> Read(long id)
@@ -112,9 +122,10 @@ public async Task<Result<UserCredentials>> Read(long id)
 ```
 
 Another positive aspect is to **avoid returning null objects** which make the application prone to **null exceptions**.
-Now that service is returning an encapsulated result and controller must return a response. It is a good thing to
-create a method in an **abstract controller**, so it can be reused in every controller, that handle this. 
-This way the **HTTP response status** always match the **service result**.
+
+Now that service is returning an encapsulated result, the controller must return a response. It is a good thing to
+create a method that handle this in an **abstract controller**, so it can be reused in every controller. 
+Thanks to this method, the controller always return the **HTTP response status** that match the **service result**.
 
 ```csharp
 [NonAction]
@@ -132,12 +143,13 @@ public IActionResult CorrespondingStatus<T>(Result<T> result)
 
 ### HTTP files
 
-While Postman is really great, having a HTTP client with all your predefined requests **inside your project** is such a handy tool. It allows to 
+While **Postman** is really great, having a HTTP client with all your predefined requests **inside your project** is such a handy tool. It allows to 
 bind your code to those requests **in the version control**. Hence when members of the team pull your code, they instantly have the possibility 
 to test it with your HTTP requests, saving time and making collaboration easier.
 
-HTTP requests are defined in .http files. Examples for this project can be found in the **Https** folder. Each file corresponds to a controller. There 
-a still some limitations, it is not possible to add **pre-request or post-response scripts** like in Postman.
+HTTP requests are defined in **.http files**. Examples for this project can be found in the **Https** folder. Each file corresponds to a controller. There 
+a still some limitations, it is not possible to add **pre-request or post-response scripts** like in Postman. That being said, this tool is quite new
+and it is reasonable to think that this kind of features will be added in the future.
 
 ```http
 POST {{HostAddress}}/Authentication/CreateJwtBearer
@@ -149,7 +161,7 @@ Content-Type: application/json
 }
 ```
 
-Variables, which are between double curly braces, can be defined in the **http-client.env.json file**. Multiple environments can be configured, making 
+**Variables**, which are between double curly braces, can be defined in the **http-client.env.json file**. Multiple environments can be configured, making 
 possible to attribute **a different value** to a variable for each environment. Then it is easy to **switch** between environment with the same request, 
 making the workflow even **faster**.
 
@@ -194,15 +206,15 @@ builder.Services.AddDbContext<StarterContext>(options =>
         options.UseSqlServer(connectionString));
 ```
 
-Once all above is done, it is possible apply this structure to the running database. First step consist to create a new
-migration with this PowerShell command. New .cs files describing every table will be generated in Migrations folder.
+Once all above is done, it is possible **apply this structure** to the running database. First step consist to create a new
+migration with this PowerShell command. New .cs files describing every table will be generated in **Migrations folder**.
 
 ```bash
 dotnet ef migrations add InitialCreate
 ```
 
-When it's done, migration can be applied to the database with this command. EntityFramework will use the connection string
-in order to connect to the running database and apply changes contained in the previously generated migration files.
+When it's done, **migration** can be applied to the database with this command. EntityFramework will use the connection string
+in order to connect to the running database and **apply changes** contained in the previously generated migration files.
 
 ```bash
 dotnet ef database update
@@ -281,7 +293,7 @@ dotnet ef migrations script --output ./Migrations/Script.sql
 
 ### Logging
 
-The most common error when developing a web API is to post an **invalid object** and get a **bad request** response in return. When this happens the developer 
+A common error when developing a web API is to post an **invalid object** and get a **bad request** response in return. When this happens the developer 
 needs to investigate the **ModelState**, but it can be a long and painful process. Fortunately, it is now possible to automatically log ModelState errors and
 see the **relevant details**, particularly which **object property** is causing the invalid state.
 
@@ -334,4 +346,4 @@ global using Starter.WebApi.Services.Interfaces;
 ## Opening
 
 This project does not cover everything of course. It aims to provide the basics and get you going quickly, so you can dive into more complex structure 
-faster. Evolving to a Domain Driven Design is possibility or using it in a microservice environment is another one.
+faster. Evolving to a Domain Driven Design is a possibility, using it in a microservice environment is another one.

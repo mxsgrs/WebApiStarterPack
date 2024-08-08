@@ -1,0 +1,12 @@
+CREATE LOGIN StarterAdmin WITH PASSWORD = 'XgNcZrpTurzRE$rj', DEFAULT_DATABASE=Starter
+GO
+ALTER SERVER ROLE [sysadmin] ADD MEMBER StarterAdmin
+GO
+USE Starter
+GO
+CREATE USER StarterAdmin FOR LOGIN StarterAdmin
+GO
+ALTER USER StarterAdmin WITH DEFAULT_SCHEMA=[dbo]
+GO
+ALTER ROLE [db_owner] ADD MEMBER StarterAdmin
+GO

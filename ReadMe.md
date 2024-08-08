@@ -199,22 +199,47 @@ can be deployed in an instant in any environment. Anyone who get this project ne
 database running in containers. Here is the following database Dockerfile allowing to build this image.
 
 ```dockerfile
-# Use the official Microsoft SQL Server image as a base
-FROM mcr.microsoft.com/mssql/server:2022-latest
+FROM mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
 
 # Set environment variables
 ENV ACCEPT_EULA=Y
-ENV SA_PASSWORD=MatrixReloaded!
+ENV MSSQL_SA_PASSWORD=B1q22MPXUgosXiqZ
 ENV MSSQL_PID=Express
 
-# Copy the migration script and entrypoint script to the container
-COPY ./Migrations/Scripts/ /scripts/
+# Create a config directory
+USER root
+RUN mkdir -p /usr/src/app
+RUN chown mssql /usr/src/app
 
-# Make the scripts executable
-RUN chmod +x /scripts/*.sh
+# Copy the initialization script to the container
+COPY *.sql /usr/src/app/
+COPY *.sh /usr/src/app/
+RUN chmod +x /usr/src/app/DbBuilder.sh
+USER mssql
 
-# Set the entrypoint to the script that initializes the database
-ENTRYPOINT ["/bin/bash", "/scripts/entrypoint.sh"]
+# Expose the SQL Server port
+EXPOSE 1433
+
+# Run the SQL Server process and the initialization script
+CMD /bin/bash /usr/src/app/DbBuilder.sh & /opt/mssql/bin/sqlservr
+```
+
+A shell script is used to run SQL scripts in the order
+
+```shell
+#!/bin/bash
+# Parameters
+SQLCMD_PATH="/opt/mssql-tools18/bin/sqlcmd"
+SERVER="localhost"
+USERNAME="sa"
+PASSWORD="B1q22MPXUgosXiqZ"
+DATABASE="Starter"
+echo "Waiting for SQL Server to start"
+sleep 30s
+echo "Running DbCreation.sql"
+$SQLCMD_PATH -C -S $SERVER -U $USERNAME -P $PASSWORD -d master -i /usr/src/app/DbCreation.sql
+echo "Running InitialCreate.sql"
+$SQLCMD_PATH -C -S $SERVER -U $USERNAME -P $PASSWORD -d $DATABASE -i /usr/src/app/InitialCreate.sql
 ```
 
 When creating a new migration, corresponding SQL script needs to be generated so when a new Docker image of the database

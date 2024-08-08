@@ -243,6 +243,18 @@ echo "Running InitialCreate.sql"
 $SQLCMD_PATH -C -S $SERVER -U $USERNAME -P $PASSWORD -d $DATABASE -i /usr/src/app/InitialCreate.sql
 ```
 
+A local instance of the database can be run with LocalDatabase.bat which its content is this.
+
+```bat
+@echo off
+
+:: Pull SQL Server image
+docker pull mxsgrs/startedb:v1.0.0
+
+:: Run a SQL Server container
+docker run -p 1433:1433 --name starterdb -d mxsgrs/starterdb:v1.0.0
+```
+
 When creating a new migration, corresponding SQL script needs to be generated so when a new Docker image of the database
 is built, the latest migration is included. Use this command for generating a script based on migrations.
 

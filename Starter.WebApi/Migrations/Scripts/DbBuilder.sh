@@ -5,6 +5,7 @@ SERVER="localhost"
 USERNAME="sa"
 PASSWORD="B1q22MPXUgosXiqZ"
 DATABASE="Starter"
+# Execution
 echo "Waiting for SQL Server to start"
 sleep 30s
 echo "Running DbCreation.sql"

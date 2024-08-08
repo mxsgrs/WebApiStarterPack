@@ -122,6 +122,19 @@ While Postman is really great, having a HTTP client with all your predefined req
 bind your code to those requests **in the version control**. Hence when members of the team pull your code, they instantly have the possibility 
 to test it with your HTTP requests, saving time and making collaboration easier.
 
+HTTP requests are defined in .http files. Examples for this project can be found in the **Https** folder. Each file corresponds to a controller. There 
+a still some limitations, it is not possible to add pre-request or post-response scripts like in Postman, but again this feature is young and will grow.
+
+```http
+POST {{HostAddress}}/Authentication/CreateJwtBearer
+Content-Type: application/json
+
+{
+  "emailAddress": "robert.durand@gmail.com",
+  "hashedPassword": "369b62d459de8a74683f87c276ff8a264d6b247add4beaa02a1c7f9f3134f495"
+}
+```
+
 Variables, which are between double curly braces, can be defined in the **http-client.env.json file**. Multiple
 environments can be configured, making possible to attribute a different value to a variable for each environment. Then it is easy to switch between environment
 with the same request, making the workflow even faster. Note that everytime this file is modified, **closing and reopening** Visual Studio is needed so changes 
@@ -137,19 +150,6 @@ are taken into account. I hope Microsoft will fix this in the future.
     "HostAddress": "https://starterwebapi.com",
     "Jwt": "xxx.yyy.zzz"
   }
-}
-```
-
-HTTP requests are defined in .http files. Examples for this project can be found in the **Https** folder. Each file corresponds to a controller. There 
-a still some limitations, it is not possible to add pre-request or post-response scripts like in Postman, but again this feature is young and will grow.
-
-```http
-POST {{HostAddress}}/Authentication/CreateJwtBearer
-Content-Type: application/json
-
-{
-  "emailAddress": "robert.durand@gmail.com",
-  "hashedPassword": "369b62d459de8a74683f87c276ff8a264d6b247add4beaa02a1c7f9f3134f495"
 }
 ```
 
@@ -224,7 +224,7 @@ EXPOSE 1433
 CMD /bin/bash /usr/src/app/DbBuilder.sh & /opt/mssql/bin/sqlservr
 ```
 
-A shell script is used to run SQL scripts in the order
+A shell script is used to run SQL scripts in order.
 
 ```shell
 #!/bin/bash
@@ -234,6 +234,7 @@ SERVER="localhost"
 USERNAME="sa"
 PASSWORD="B1q22MPXUgosXiqZ"
 DATABASE="Starter"
+# Execution
 echo "Waiting for SQL Server to start"
 sleep 30s
 echo "Running DbCreation.sql"
@@ -252,8 +253,8 @@ dotnet ef migrations script --output ./Migrations/Script.sql
 ### Logging
 
 The most common error when developing a web API is to post an **invalid object** and get a **bad request** response in return. When this happens the developer 
-needs to investigate the **ModelState**, but it can be a long and painful process. Fortunately, it is now possible to see the **relevant details** and 
-particularly which **object property** is causing the invalid state.
+needs to investigate the **ModelState**, but it can be a long and painful process. Fortunately, it is now possible to automatically log ModelState errors and
+see the **relevant details**, particularly which **object property** is causing the invalid state.
 
 ```csharp
 builder.Services.AddControllers()
@@ -276,6 +277,14 @@ builder.Services.AddControllers()
             return builtInFactory(context);
         };
     });
+```
+
+As this is logging, it will appear in every configured sink. One of them being the console which is always open, it allows developers to see this 
+type of content immediately. Here is an example.
+
+```
+2024-08-08 18:10:01 fail: Program[0]
+2024-08-08 18:10:01       The EmailAddress field is required.
 ```
 
 ### Global usings

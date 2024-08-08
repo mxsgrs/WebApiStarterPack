@@ -21,7 +21,7 @@ public class AuthenticationControllerTests
 
         Mock<IAuthenticationService> mockAuthService = new();
         mockAuthService
-            .Setup(service => service.CreateJwtBearer(hashedLoginRequest))
+            .Setup(s => s.CreateJwtBearer(hashedLoginRequest))
             .ReturnsAsync(result);
 
         Mock<IMapper> mapper = new();

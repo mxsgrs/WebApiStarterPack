@@ -97,7 +97,24 @@ public async Task<Result<UserCredentials>> Read(long id)
 }
 ```
 
-Another positive aspect is to avoid returning null objects which make the application prone to null exceptions.
+Another positive aspect is to **avoid returning null objects** which make the application prone to **null exceptions**.
+Now that service is returning an encapsulated result and controller must return a response. It is a good thing to
+create a method in an **abstract controller**, so it can be reused in every controller, that handle this. 
+This way the **HTTP response status** always match the **service result**.
+
+```csharp
+[NonAction]
+[ApiExplorerSettings(IgnoreApi = true)]
+public IActionResult CorrespondingStatus<T>(Result<T> result)
+{
+    if (result.IsFailed)
+    {
+        return BadRequest(result.Errors);
+    }
+
+    return Ok(result.Value);
+}
+```
 
 ### HTTP files
 
@@ -171,6 +188,16 @@ builder.Services.AddControllers()
 
 With the new feature `global using`, namespaces can be included for the whole project instead having to specify it in every file. This feature improve 
 maintainability and save time on repetitive tasks. Implementation can be found in **GlobalUsing.cs** file, inside each project root folder.
+
+```csharp
+global using Starter.WebApi;
+global using Starter.WebApi.Controllers.Abstracts;
+global using Starter.WebApi.Models.Authentication;
+global using Starter.WebApi.Models.Database;
+global using Starter.WebApi.Models.DataTransferObjects;
+global using Starter.WebApi.Services;
+global using Starter.WebApi.Services.Interfaces;
+```
 
 ## Opening
 

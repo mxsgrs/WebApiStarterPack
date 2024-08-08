@@ -34,16 +34,10 @@ public class AuthenticationService(ILogger<AuthenticationService> logger, IConfi
             return Result.Fail("Credentials provided are wrong.");
         }
 
-        string issuer = _configuration["Jwt:Issuer"]
-            ?? throw new Exception("Jwt:Issuer is not set");
+        Jwt jwt = _configuration.GetRequiredSection("Jwt").Get<Jwt>()
+            ?? throw new Exception("JWT settings are not configured");
 
-        string audience = _configuration["Jwt:Audience"]
-            ?? throw new Exception("Jwt:Audience is not set");
-
-        string key = _configuration["Jwt:Key"]
-            ?? throw new Exception("Jwt:Key is not set");
-
-        byte[] encodedKey = Encoding.ASCII.GetBytes(key);
+        byte[] encodedKey = Encoding.ASCII.GetBytes(jwt.Key);
 
         SecurityTokenDescriptor tokenDescriptor = new()
         {
@@ -54,8 +48,8 @@ public class AuthenticationService(ILogger<AuthenticationService> logger, IConfi
                 new Claim(JwtRegisteredClaimNames.Email, hashedLoginRequest.EmailAddress)
             ]),
             Expires = DateTime.UtcNow.AddDays(1),
-            Issuer = issuer,
-            Audience = audience,
+            Issuer = jwt.Issuer,
+            Audience = jwt.Audience,
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(encodedKey),
                 SecurityAlgorithms.HmacSha512Signature)

@@ -10,4 +10,3 @@ global using Starter.WebApi.Models.Database;
 global using Starter.WebApi.Models.DataTransferObjects;
 global using Starter.WebApi.Services;
 global using Starter.WebApi.Services.Interfaces;
-

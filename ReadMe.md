@@ -155,6 +155,75 @@ Content-Type: application/json
 
 See official Microsoft documentation for more information [here](https://learn.microsoft.com/en-us/aspnet/core/test/http-files?view=aspnetcore-8.0).
 
+### Code first approach
+
+In this example we are using a SQL Server 2022 database with a code first approach.
+
+In the first place, **connection string** of an existing database is added in **appsettings.json** as following.
+
+```json
+"ConnectionStrings": {
+    "SqlServer": "Data Source=localhost,1433;Initial Catalog=Starter;User=sa;Password=MatrixReloaded!;TrustServerCertificate=yes"
+}
+```
+
+Then **database context and model classes are created** inside Models folder. This context is **registered as a service** 
+inside Program.cs like this.
+
+```csharp
+string connectionString = builder.Configuration.GetConnectionString("SqlServer")
+    ?? throw new Exception("Connection string is missing");
+
+builder.Services.AddDbContext<StarterContext>(options =>
+        options.UseSqlServer(connectionString));
+```
+
+Once all above is done, it is possible apply this structure to the running database. First step consist to create a new
+migration with this PowerShell command. New .cs files describing every table will be generated in Migrations folder.
+
+```bash
+dotnet ef migrations add InitialCreate
+```
+
+When it's done, migration can be applied to the database with this command. EntityFramework will use the connection string
+in order to connect to the running database and apply changes contained in the previously generated migration files.
+
+```bash
+dotnet ef database update
+```
+
+### Database Docker image
+
+Building a Docker image of the database, all migration scripts included, is a good choice. By leveraging the benefits of container, database 
+can be deployed in an instant in any environment. Anyone who get this project needs only to press run to get a web API with its fully configured
+database running in containers. Here is the following database Dockerfile allowing to build this image.
+
+```dockerfile
+# Use the official Microsoft SQL Server image as a base
+FROM mcr.microsoft.com/mssql/server:2022-latest
+
+# Set environment variables
+ENV ACCEPT_EULA=Y
+ENV SA_PASSWORD=MatrixReloaded!
+ENV MSSQL_PID=Express
+
+# Copy the migration script and entrypoint script to the container
+COPY ./Migrations/Scripts/ /scripts/
+
+# Make the scripts executable
+RUN chmod +x /scripts/*.sh
+
+# Set the entrypoint to the script that initializes the database
+ENTRYPOINT ["/bin/bash", "/scripts/entrypoint.sh"]
+```
+
+When creating a new migration, corresponding SQL script needs to be generated so when a new Docker image of the database
+is built, the latest migration is included. Use this command for generating a script based on migrations.
+
+```bash
+dotnet ef migrations script --output ./Migrations/Script.sql
+```
+
 ### Logging
 
 The most common error when developing a web API is to post an **invalid object** and get a **bad request** response in return. When this happens the developer 

@@ -37,7 +37,6 @@ public class MappingProfileTests
         UserCredentialsDto userCredentialsDto = _mapper.Map<UserCredentialsDto>(userCredentials);
 
         // Assert
-        Assert.Equal(userCredentials.Id, userCredentialsDto.Id);
         Assert.Equal(userCredentials.EmailAddress, userCredentialsDto.EmailAddress);
         Assert.Equal(userCredentials.HashedPassword, userCredentialsDto.HashedPassword);
         Assert.Equal(userCredentials.UserRole, userCredentialsDto.UserRole);
@@ -70,7 +69,6 @@ public class MappingProfileTests
         UserProfileDto dto = _mapper.Map<UserProfileDto>(userProfile);
 
         // Assert
-        Assert.Equal(userProfile.Id, dto.Id);
         Assert.Equal(userProfile.FirstName, dto.FirstName);
         Assert.Equal(userProfile.LastName, dto.LastName);
         Assert.Equal(userProfile.Birthday, dto.Birthday);
@@ -84,7 +82,6 @@ public class MappingProfileTests
         Assert.Equal(userProfile.ZipCode, dto.ZipCode);
         Assert.Equal(userProfile.StateProvince, dto.StateProvince);
         Assert.Equal(userProfile.Country, dto.Country);
-        Assert.Equal(userProfile.UserCredentialsId, dto.UserCredentialsId);
     }
 }
 

@@ -3,6 +3,20 @@
 ## Introduction
 
 This project implements a web API with ASP.NET Core 8 with the most common features. It is paired with a SQL Server database using a code first approach.
+While this project use Docker for running a local database, which is very handy, the main goal is not to cover DevOps technologies. This content focus
+primarily on building a simple ASP.NET web API with the latest technologies.
+
+### Prerequisites
+
+Before anything please install if they are not already the following elements
+- Download and install **.NET 8** [here](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- Download and install **Docker Desktop** [here](https://docs.docker.com/desktop/install/windows-install/)
+
+### Run
+
+In order to run this application
+- Execute **LocalDatabase.bat** in the root folder
+- Run **Starter.WebApi** project
 
 ## Features
 
@@ -123,7 +137,7 @@ bind your code to those requests **in the version control**. Hence when members 
 to test it with your HTTP requests, saving time and making collaboration easier.
 
 HTTP requests are defined in .http files. Examples for this project can be found in the **Https** folder. Each file corresponds to a controller. There 
-a still some limitations, it is not possible to add pre-request or post-response scripts like in Postman, but again this feature is young and will grow.
+a still some limitations, it is not possible to add **pre-request or post-response scripts** like in Postman.
 
 ```http
 POST {{HostAddress}}/Authentication/CreateJwtBearer
@@ -135,10 +149,12 @@ Content-Type: application/json
 }
 ```
 
-Variables, which are between double curly braces, can be defined in the **http-client.env.json file**. Multiple
-environments can be configured, making possible to attribute a different value to a variable for each environment. Then it is easy to switch between environment
-with the same request, making the workflow even faster. Note that everytime this file is modified, **closing and reopening** Visual Studio is needed so changes 
-are taken into account. I hope Microsoft will fix this in the future.
+Variables, which are between double curly braces, can be defined in the **http-client.env.json file**. Multiple environments can be configured, making 
+possible to attribute **a different value** to a variable for each environment. Then it is easy to **switch** between environment with the same request, 
+making the workflow even **faster**.
+
+Note that everytime this file is modified, **closing and reopening** Visual Studio is needed so changes are **taken into account**. I hope Microsoft will 
+fix this in the future.
 
 ```json
 {
@@ -194,9 +210,9 @@ dotnet ef database update
 
 ### Database Docker image
 
-Building a Docker image of the database, all migration scripts included, is a good choice. By leveraging the benefits of container, database 
-can be deployed in an instant in any environment. Anyone who get this project needs only to press run to get a web API with its fully configured
-database running in containers. Here is the following database Dockerfile allowing to build this image.
+Building a **Docker image** of the database, all migration **scripts included**, is a good choice. By leveraging the benefits of container, database 
+can be deployed **in an instant** in any environment. Anyone who get this project needs only to press run to get a web API with its fully configured
+database running in containers. Here is the following database **Dockerfile** allowing to build this image.
 
 ```dockerfile
 FROM mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
@@ -224,7 +240,8 @@ EXPOSE 1433
 CMD /bin/bash /usr/src/app/DbBuilder.sh & /opt/mssql/bin/sqlservr
 ```
 
-A shell script is used to run SQL scripts in order.
+A **Shell script** is used to run SQL scripts in order. As you can see database need a **bit of time** before intialization scripts
+can be run.
 
 ```shell
 #!/bin/bash
@@ -243,7 +260,7 @@ echo "Running InitialCreate.sql"
 $SQLCMD_PATH -C -S $SERVER -U $USERNAME -P $PASSWORD -d $DATABASE -i /usr/src/app/InitialCreate.sql
 ```
 
-A local instance of the database can be run with LocalDatabase.bat which its content is this.
+A **local instance** of the database can be run with **LocalDatabase.bat** which looks like this.
 
 ```bat
 @echo off
@@ -255,8 +272,8 @@ docker pull mxsgrs/startedb:v1.0.0
 docker run -p 1433:1433 --name starterdb -d mxsgrs/starterdb:v1.0.0
 ```
 
-When creating a new migration, corresponding SQL script needs to be generated so when a new Docker image of the database
-is built, the latest migration is included. Use this command for generating a script based on migrations.
+When creating a new migration, corresponding **SQL script needs to be generated** so when a new Docker image of the database
+is built, the **latest migration is included**. Use this command for generating a script based on migrations.
 
 ```bash
 dotnet ef migrations script --output ./Migrations/Script.sql

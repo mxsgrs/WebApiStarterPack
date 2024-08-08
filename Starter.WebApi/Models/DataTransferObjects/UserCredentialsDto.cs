@@ -4,13 +4,11 @@ namespace Starter.WebApi.Models.DataTransferObjects;
 
 public class UserCredentialsDto
 {
-    public long Id { get; set; }
+    [Required]
+    public string EmailAddress { get; set; } = string.Empty;
 
     [Required]
-    public string EmailAddress { get; set; }
+    public string HashedPassword { get; set; } = string.Empty;
 
-    [Required]
-    public string HashedPassword { get; set; }
-
-    public string UserRole { get; set; }
+    public string UserRole { get; set; } = string.Empty;
 }

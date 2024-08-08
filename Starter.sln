@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.WebApi", "Starter.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.WebApi.Tests", "Starter.WebApi.Tests\Starter.WebApi.Tests.csproj", "{A9EB1918-662F-4098-AA38-5233B694A4FE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{F526B5C5-1479-442B-8AAF-26F2523E6912}"
+	ProjectSection(SolutionItems) = preProject
+		LocalDatabase.bat = LocalDatabase.bat
+		ReadMe.md = ReadMe.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

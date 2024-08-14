@@ -1,4 +1,4 @@
-﻿namespace Starter.WebApi.Tests.Facts.Mapping;
+﻿namespace Starter.WebApi.UnitTests.Facts.Profiles;
 
 public class MappingProfileTests
 {

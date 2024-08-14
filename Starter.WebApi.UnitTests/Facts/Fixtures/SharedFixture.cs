@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 
-namespace Starter.WebApi.Tests.Facts.Fixtures;
+namespace Starter.WebApi.UnitTests.Facts.Fixtures;
 
 public class SharedFixture
 {

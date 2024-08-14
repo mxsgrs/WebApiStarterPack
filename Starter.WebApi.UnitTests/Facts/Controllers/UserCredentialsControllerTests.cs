@@ -1,4 +1,4 @@
-﻿namespace Starter.WebApi.Tests.Facts.Controllers;
+﻿namespace Starter.WebApi.UnitTests.Facts.Controllers;
 
 public class UserCredentialsControllerTests
 {
@@ -22,8 +22,8 @@ public class UserCredentialsControllerTests
     public async Task CreateOrUpdate_ShouldReturnOk_WhenLoginIsSuccessful()
     {
         // Arrange
-        UserCredentials userCredentials = new() 
-        { 
+        UserCredentials userCredentials = new()
+        {
             EmailAddress = "john.doe@gmail.com",
             HashedPassword = "TWF0cml4UmVsb2FkZWQh",
             UserRole = "admin"

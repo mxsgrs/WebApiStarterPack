@@ -1,4 +1,4 @@
-﻿namespace Starter.WebApi.Tests.Facts.Controllers;
+﻿namespace Starter.WebApi.UnitTests.Facts.Controllers;
 
 public class UserProfileControllerTests
 {

@@ -1,4 +1,6 @@
-﻿namespace Starter.WebApi.Tests.Facts.Services;
+﻿using Starter.WebApi.UnitTests.Facts.Fixtures;
+
+namespace Starter.WebApi.UnitTests.Facts.Services;
 
 public class UserCredentialsServiceTests(SharedFixture fixture) : IClassFixture<SharedFixture>
 {

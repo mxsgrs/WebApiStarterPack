@@ -15,7 +15,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.7" />
+    <PackageReference Include="FluentResults" Version="3.16.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit" Version="2.9.0" />
@@ -26,11 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
+    <ProjectReference Include="..\Starter.WebApi\Starter.WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Starter.WebApi\Starter.WebApi.csproj" />
+    <Using Include="Xunit" />
   </ItemGroup>
 
   <ItemGroup>

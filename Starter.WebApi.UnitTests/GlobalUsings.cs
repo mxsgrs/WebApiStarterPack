@@ -11,4 +11,4 @@ global using Starter.WebApi.Models.DataTransferObjects;
 global using Starter.WebApi.Models.DataTransferObjects.Profiles;
 global using Starter.WebApi.Services;
 global using Starter.WebApi.Services.Interfaces;
-global using Starter.WebApi.Tests.Facts.Fixtures;
+global using Starter.WebApi.UnitTests.Facts.Fixtures;

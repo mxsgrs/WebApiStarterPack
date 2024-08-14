@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Starter.WebApi.IntegrationTests;
+namespace Starter.WebApi.IntegrationTests.Facts.Factories;
 
 internal class StarterWebApplicationFactory : WebApplicationFactory<Program>
 {

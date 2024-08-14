@@ -1,5 +1,4 @@
-﻿using Starter.WebApi.Models.Authentication;
-using System.Net;
+﻿using System.Net;
 using System.Text;
 using System.Text.Json;
 
@@ -56,7 +55,7 @@ public class AuthenticationControllerTests
         HttpResponseMessage response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }
 

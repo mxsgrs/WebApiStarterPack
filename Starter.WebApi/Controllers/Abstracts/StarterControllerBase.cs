@@ -1,11 +1,13 @@
-﻿namespace Starter.WebApi.Controllers.Abstracts;
+﻿using System.Text.RegularExpressions;
+
+namespace Starter.WebApi.Controllers.Abstracts;
 
 /// <summary>
 /// Abstraction for application controllers
 /// </summary>
 [ApiController]
 [Authorize]
-[Route("[controller]/[action]")]
+[Route("api/[controller]/[action]")]
 public class StarterControllerBase(IMapper mapper) : ControllerBase
 {
     private readonly IMapper _mapper = mapper;
@@ -64,5 +66,16 @@ public class StarterControllerBase(IMapper mapper) : ControllerBase
         Y? mappedValue = _mapper.Map<Y>(result.Value);
 
         return Ok(mappedValue);
+    }
+}
+
+/// <summary>
+/// Transform to kebab case
+/// </summary>
+public class ToKebabParameterTransformer : IOutboundParameterTransformer
+{
+    public string TransformOutbound(object? value)
+    {
+        return Regex.Replace(value?.ToString() ?? "", "([a-z])([A-Z])", "$1-$2").ToLower();
     }
 }

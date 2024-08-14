@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -31,10 +32,11 @@ Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 builder.Services.AddAutoMapper(assemblies);
 
 // Add controllers and serialization
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+builder.Services.AddControllers(options =>
     {
-        //options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        // Use kebab case for endpoint URLs
+        ToKebabParameterTransformer toKebab = new();
+        options.Conventions.Add(new RouteTokenTransformerConvention(toKebab));
     })
     .ConfigureApiBehaviorOptions(options =>
     {

@@ -39,7 +39,7 @@ public class SharedFixture
     {
         string currentDirectory = Directory.GetCurrentDirectory();
         string path = $"{currentDirectory}{relativePath}";
-        string json = string.Empty;
+        string json = "";
 
         if (File.Exists(path))
         {

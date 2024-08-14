@@ -1,4 +1,4 @@
-﻿namespace Starter.WebApi.Models.Database;
+﻿namespace Starter.WebApi.Models.Entities;
 
 public partial class StarterContext : DbContext
 {

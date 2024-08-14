@@ -70,12 +70,22 @@ public class StarterControllerBase(IMapper mapper) : ControllerBase
 }
 
 /// <summary>
-/// Transform to kebab case
+/// Use kebab case for route
 /// </summary>
-public class ToKebabParameterTransformer : IOutboundParameterTransformer
+public partial class ToKebabParameterTransformer : IOutboundParameterTransformer
 {
+    /// <summary>
+    /// Convert pascal case to kebab case
+    /// </summary>
+    /// <param name="value">Initial route value</param>
+    /// <returns>Route with kebab case as naming convention</returns>
     public string TransformOutbound(object? value)
     {
-        return Regex.Replace(value?.ToString() ?? "", "([a-z])([A-Z])", "$1-$2").ToLower();
+        return MatchLowercaseThenUppercase()
+            .Replace(value?.ToString() ?? "", "$1-$2")
+            .ToLower();
     }
+
+    [GeneratedRegex("([a-z])([A-Z])")]
+    private static partial Regex MatchLowercaseThenUppercase();
 }

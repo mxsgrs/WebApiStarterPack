@@ -5,13 +5,15 @@ using System.Text.Json;
 
 namespace Starter.WebApi.IntegrationTests.Facts.Controllers;
 
-public class AuthenticationControllerTests()
+public class AuthenticationControllerTests
 {
+    private readonly StarterWebApplicationFactory _factory = new();
+
     [Fact]
     public async Task CreateJwtBearer_ShouldReturnOk_WhenLoginIsSuccessful()
     {
         // Arrange
-        HttpClient client = new StarterWebApplicationFactory().CreateClient();
+        HttpClient client = _factory.CreateClient();
         HashedLoginRequest hashedLoginRequest = new()
         {
             EmailAddress = "testuser@gmail.com",
@@ -37,7 +39,7 @@ public class AuthenticationControllerTests()
     public async Task CreateJwtBearer_ShouldReturnUnauthorized_WhenLoginFails()
     {
         // Arrange
-        HttpClient client = new StarterWebApplicationFactory().CreateClient();
+        HttpClient client = _factory.CreateClient();
         HashedLoginRequest hashedLoginRequest = new()
         {
             EmailAddress = "testuser@gmail.com",

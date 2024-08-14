@@ -74,7 +74,7 @@ public class UserCredentialsServiceTests(SharedFixture fixture) : IClassFixture<
     {
         // Arrange
         StarterContext dbContext = SharedFixture.CreateDatabaseContext();
-        UserCredentials existingUserCredentials = new UserCredentials
+        UserCredentials existingUserCredentials = new()
         {
             Id = 1,
             EmailAddress = "existinguser@example.com",

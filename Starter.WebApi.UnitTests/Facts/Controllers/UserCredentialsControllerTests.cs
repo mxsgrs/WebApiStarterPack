@@ -19,7 +19,7 @@ public class UserCredentialsControllerTests
     }
 
     [Fact]
-    public async Task CreateOrUpdate_ShouldReturnOk_WhenLoginIsSuccessful()
+    public async Task CreateOrUpdate_ShouldReturnOk_WhenCreateOrUpdateIsSuccessful()
     {
         // Arrange
         UserCredentials userCredentials = new()
@@ -42,7 +42,7 @@ public class UserCredentialsControllerTests
     }
 
     [Fact]
-    public async Task CreateOrUpdate_ShouldReturnBadRequest_WhenLoginFails()
+    public async Task CreateOrUpdate_ShouldReturnBadRequest_WhenCreateOrUpdateFails()
     {
         // Arrange
         UserCredentialsDto userCredentialsDto = new()

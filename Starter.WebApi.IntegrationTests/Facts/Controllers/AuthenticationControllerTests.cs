@@ -1,8 +1,4 @@
-﻿using System.Net;
-using System.Text;
-using System.Text.Json;
-
-namespace Starter.WebApi.IntegrationTests.Facts.Controllers;
+﻿namespace Starter.WebApi.IntegrationTests.Facts.Controllers;
 
 public class AuthenticationControllerTests
 {
@@ -69,4 +65,3 @@ public class AuthenticationControllerTests
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }
-

@@ -1,6 +1,4 @@
-﻿using Starter.WebApi.UnitTests.Facts.Fixtures;
-
-namespace Starter.WebApi.UnitTests.Facts.Services;
+﻿namespace Starter.WebApi.UnitTests.Facts.Services;
 
 public class UserProfileServiceTests(SharedFixture fixture) : IClassFixture<SharedFixture>
 {

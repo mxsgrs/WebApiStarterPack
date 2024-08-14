@@ -6,13 +6,23 @@ namespace Starter.WebApi.IntegrationTests.Facts.Controllers;
 
 public class AuthenticationControllerTests
 {
-    private readonly StarterWebApplicationFactory _factory = new();
-
     [Fact]
     public async Task CreateJwtBearer_ShouldReturnOk_WhenLoginIsSuccessful()
     {
         // Arrange
-        HttpClient client = _factory.CreateClient();
+        static void AddUserCredentials(StarterContext dbContext)
+        {
+            UserCredentials userCredentials = new()
+            {
+                EmailAddress = "testuser@gmail.com",
+                HashedPassword = "testpasswordhash",
+                UserRole = "admin"
+            };
+            dbContext.UserCredentials.Add(userCredentials);
+            dbContext.SaveChanges();
+        }
+        StarterWebApplicationFactory factory = new(AddUserCredentials);
+        HttpClient client = factory.CreateClient();
         HashedLoginRequest hashedLoginRequest = new()
         {
             EmailAddress = "testuser@gmail.com",
@@ -31,14 +41,15 @@ public class AuthenticationControllerTests
         // Assert
         response.EnsureSuccessStatusCode();
         string jsonResponse = await response.Content.ReadAsStringAsync();
-        Assert.Contains("token", jsonResponse);
+        Assert.Contains("accessToken", jsonResponse);
     }
 
     [Fact]
     public async Task CreateJwtBearer_ShouldReturnUnauthorized_WhenLoginFails()
     {
         // Arrange
-        HttpClient client = _factory.CreateClient();
+        StarterWebApplicationFactory factory = new();
+        HttpClient client = factory.CreateClient();
         HashedLoginRequest hashedLoginRequest = new()
         {
             EmailAddress = "testuser@gmail.com",

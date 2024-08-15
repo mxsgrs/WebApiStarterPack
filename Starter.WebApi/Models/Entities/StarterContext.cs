@@ -5,9 +5,12 @@ public partial class StarterContext : DbContext
     public StarterContext(DbContextOptions<StarterContext> options)
         : base(options)
     {
-#if DEBUG
-        Database.Migrate();
-#endif
+        string? aspNetCoreEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        if (aspNetCoreEnvironment == "Development")
+        {
+            Database.Migrate();
+        }
     }
 
     public virtual DbSet<UserCredentials> UserCredentials { get; set; }

@@ -1,0 +1,16 @@
+services:
+  starter.webapi:
+    image: ${DOCKER_REGISTRY-}starterwebapi
+    container_name: starter.webapi
+    build:
+      context: .
+      dockerfile: Starter.WebApi/Dockerfile
+
+  starter.mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: starter.mssql
+    environment:
+      SA_PASSWORD: "B1q22MPXUgosXiqZ"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"

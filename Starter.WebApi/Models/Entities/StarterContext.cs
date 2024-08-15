@@ -5,6 +5,9 @@ public partial class StarterContext : DbContext
     public StarterContext(DbContextOptions<StarterContext> options)
         : base(options)
     {
+#if DEBUG
+        Database.Migrate();
+#endif
     }
 
     public virtual DbSet<UserCredentials> UserCredentials { get; set; }

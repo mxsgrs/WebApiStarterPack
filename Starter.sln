@@ -7,13 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.WebApi", "Starter.W
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{F526B5C5-1479-442B-8AAF-26F2523E6912}"
 	ProjectSection(SolutionItems) = preProject
-		LocalDatabase.bat = LocalDatabase.bat
 		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.WebApi.UnitTests", "Starter.WebApi.UnitTests\Starter.WebApi.UnitTests.csproj", "{90C4010A-1449-4898-9583-7D5994BF7742}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starter.WebApi.IntegrationTests", "Starter.WebApi.IntegrationTests\Starter.WebApi.IntegrationTests.csproj", "{D3FE3138-4E01-48E8-82C2-EC6CF28B5F75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.WebApi.IntegrationTests", "Starter.WebApi.IntegrationTests\Starter.WebApi.IntegrationTests.csproj", "{D3FE3138-4E01-48E8-82C2-EC6CF28B5F75}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C79A5C60-868D-416E-868E-0C833D0A4D48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +34,10 @@ Global
 		{D3FE3138-4E01-48E8-82C2-EC6CF28B5F75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3FE3138-4E01-48E8-82C2-EC6CF28B5F75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3FE3138-4E01-48E8-82C2-EC6CF28B5F75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C79A5C60-868D-416E-868E-0C833D0A4D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C79A5C60-868D-416E-868E-0C833D0A4D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C79A5C60-868D-416E-868E-0C833D0A4D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C79A5C60-868D-416E-868E-0C833D0A4D48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

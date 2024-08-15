@@ -3,7 +3,7 @@
 ## Introduction
 
 This project implements a web API with ASP.NET Core 8 with the most common features. It is paired with a SQL Server database using a code first approach.
-While this project use Docker for running a local database, which is very handy, the main goal is not to cover DevOps technologies. This content focus
+While this project use Docker Compose for running the API and its database, the main goal is not to cover DevOps technologies. This content focus
 primarily on building a simple ASP.NET web API with the latest technologies.
 
 ### Prerequisites
@@ -14,9 +14,17 @@ Before anything please install if they are not already the following elements
 
 ### Run
 
-In order to run this application
-- Execute **LocalDatabase.bat** in the root folder
-- Run **Starter.WebApi** project
+In order to run this application, set Docker Compose as start up project and click on run. According to its configuration, Docker Compose will create a
+**container for the API** based on the corresponding project and an other **container for a SQL Server database** based on a Microsoft official image. 
+EntityFramework migrations will be applied at runtime to the database.
+
+Inside the web API project there is a folder which contains **predefined HTTP requests**. First request should create a new user with **UserCredentials.http**.
+Once it's done JWT can be generated with **Authentication.http**, other endpoints can be accessed and so on.
+
+### Tests
+
+Of course this solution includes unit tests and integration tests for this application. Note that **integration tests use a containerized database** by leveraging 
+the **Testcontainers** nuget package.
 
 ## Features
 
@@ -219,6 +227,30 @@ in order to connect to the running database and **apply changes** contained in t
 ```bash
 dotnet ef database update
 ```
+
+As this project use a containerized database, some unsual scenarios can happen. For example, the API is already running and a database container is 
+created. Another scenario could be with an already running database container and the API that starts running.
+
+In each of these scenarios we need to make sure the **migrations are applied** to the database and in case not, the application should do it. Migration 
+could be **applied at application startup** but that wouldn't cover the scenario where **database is dropped and recreated while applicaton is still running**. 
+This is why I make sure **all migrations are applied at every interaction with the database** with the following piece of code, inside my **DbContext**.
+
+```csharp
+public partial class StarterContext : DbContext
+{
+    public StarterContext(DbContextOptions<StarterContext> options) : base(options)
+    {
+        string? aspNetCoreEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        if (aspNetCoreEnvironment == "Development")
+        {
+            Database.Migrate();
+        }
+    }
+```
+
+As this application uses an in-memory database for unit tests, **migration should not be applied during those tests**. This is why I am checking the environment 
+name before applying or not the migrations.
 
 ### Logging
 

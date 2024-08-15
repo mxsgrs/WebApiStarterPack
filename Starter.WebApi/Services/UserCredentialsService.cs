@@ -3,8 +3,8 @@
 /// <summary>
 /// User credentials CRUD operations
 /// </summary>
-/// <param name="logger"></param>
-/// <param name="dbContext"></param>
+/// <param name="logger">Logging interface</param>
+/// <param name="dbContext">Database context</param>
 public class UserCredentialsService(ILogger<UserCredentialsService> logger, StarterContext dbContext,
     IAppContextAccessor appContextAccessor) : IUserCredentialsService
 {

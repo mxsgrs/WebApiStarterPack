@@ -1,10 +1,16 @@
-﻿namespace Starter.WebApi.Models.Database;
+﻿namespace Starter.WebApi.Models.Entities;
 
 public partial class StarterContext : DbContext
 {
     public StarterContext(DbContextOptions<StarterContext> options)
         : base(options)
     {
+        string? aspNetCoreEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        if (aspNetCoreEnvironment == "Development")
+        {
+            Database.Migrate();
+        }
     }
 
     public virtual DbSet<UserCredentials> UserCredentials { get; set; }

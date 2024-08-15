@@ -1,11 +1,11 @@
-﻿namespace Starter.WebApi.Tests.Facts.Services;
+﻿namespace Starter.WebApi.UnitTests.Facts.Services;
 
 public class AuthenticationServiceTests(SharedFixture fixture) : IClassFixture<SharedFixture>
 {
     private readonly SharedFixture _fixture = fixture;
 
     [Fact]
-    public async Task CreateJwtBearer_ShouldReturnToken_WhenCredentialsAreValid()
+    public async Task CreateJwtBearer_ShouldReturnSuccess_WhenCredentialsAreValid()
     {
         // Arrange
         Mock<ILogger<AuthenticationService>> loggerMock = new();
@@ -37,7 +37,7 @@ public class AuthenticationServiceTests(SharedFixture fixture) : IClassFixture<S
     }
 
     [Fact]
-    public async Task CreateJwtBearer_ShouldFail_WhenCredentialsAreInvalid()
+    public async Task CreateJwtBearer_ShouldReturnFailure_WhenCredentialsAreInvalid()
     {
         // Arrange
         Mock<ILogger<AuthenticationService>> loggerMock = new();

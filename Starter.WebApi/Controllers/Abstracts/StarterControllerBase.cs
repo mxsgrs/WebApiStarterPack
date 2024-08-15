@@ -5,7 +5,7 @@
 /// </summary>
 [ApiController]
 [Authorize]
-[Route("[controller]/[action]")]
+[Route("api/[controller]/[action]")]
 public class StarterControllerBase(IMapper mapper) : ControllerBase
 {
     private readonly IMapper _mapper = mapper;

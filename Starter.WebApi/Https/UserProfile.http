@@ -1,6 +1,6 @@
 ﻿
 # Create a new user
-POST {{HostAddress}}/UserProfile/CreateOrUpdate
+POST {{HostAddress}}/api/user-profile/create-or-update
 Content-Type: application/json
 Authorization: Bearer {{Jwt}}
 
@@ -23,5 +23,5 @@ Authorization: Bearer {{Jwt}}
 ###
 
 # Read token user
-GET {{HostAddress}}/UserProfile/Read
+GET {{HostAddress}}/api/user-profile/read
 Authorization: Bearer {{Jwt}}

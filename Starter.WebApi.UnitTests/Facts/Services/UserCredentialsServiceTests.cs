@@ -1,4 +1,4 @@
-﻿namespace Starter.WebApi.Tests.Facts.Services;
+﻿namespace Starter.WebApi.UnitTests.Facts.Services;
 
 public class UserCredentialsServiceTests(SharedFixture fixture) : IClassFixture<SharedFixture>
 {
@@ -6,7 +6,7 @@ public class UserCredentialsServiceTests(SharedFixture fixture) : IClassFixture<
     private readonly Mock<ILogger<UserCredentialsService>> _loggerMock = new();
 
     [Fact]
-    public async Task CreateOrUpdate_ShouldCreateNewUserCredentials_WhenUserCredentialsDoesNotExist()
+    public async Task CreateOrUpdate_ShouldReturnSuccess_WhenUserCredentialsDoesNotExist()
     {
         // Arrange
         StarterContext dbContext = SharedFixture.CreateDatabaseContext();
@@ -33,7 +33,7 @@ public class UserCredentialsServiceTests(SharedFixture fixture) : IClassFixture<
     }
 
     [Fact]
-    public async Task CreateOrUpdate_ShouldUpdateExistingUserCredentials_WhenUserCredentialsExist()
+    public async Task CreateOrUpdate_ShouldReturnSuccess_WhenUserCredentialsExist()
     {
         // Arrange
         StarterContext dbContext = SharedFixture.CreateDatabaseContext();
@@ -70,32 +70,21 @@ public class UserCredentialsServiceTests(SharedFixture fixture) : IClassFixture<
     }
 
     [Fact]
-    public async Task Read_ShouldReturnUserCredentials_WhenUserCredentialsExist()
+    public async Task Read_ShouldReturnFailure_WhenEmailAndPasswordDoNotMatch()
     {
         // Arrange
         StarterContext dbContext = SharedFixture.CreateDatabaseContext();
-        UserCredentials existingUserCredentials = new UserCredentials
-        {
-            Id = 1,
-            EmailAddress = "existinguser@example.com",
-            HashedPassword = "password",
-            UserRole = "User"
-        };
-        dbContext.UserCredentials.Add(existingUserCredentials);
-        dbContext.SaveChanges();
-
         UserCredentialsService service = new(
             _loggerMock.Object,
             dbContext,
             _fixture.AppContextAccessor);
 
         // Act
-        Result<UserCredentials> result = await service.Read();
+        Result<UserCredentials> result = await service.Read("nonexistentuser@example.com", "wrongpassword");
 
         // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.Value.Should().NotBeNull();
-        result.Value.EmailAddress.Should().Be("existinguser@example.com");
+        result.IsSuccess.Should().BeFalse();
+        result.Errors[0].Message.Should().Contain("User credentials does not exist.");
     }
 
     [Fact]
@@ -117,7 +106,7 @@ public class UserCredentialsServiceTests(SharedFixture fixture) : IClassFixture<
     }
 
     [Fact]
-    public async Task Read_ShouldReturnUserCredentials_WhenEmailAndPasswordMatch()
+    public async Task Read_ShouldReturnSuccess_WhenEmailAndPasswordMatch()
     {
         // Arrange
         StarterContext dbContext = SharedFixture.CreateDatabaseContext();
@@ -146,20 +135,31 @@ public class UserCredentialsServiceTests(SharedFixture fixture) : IClassFixture<
     }
 
     [Fact]
-    public async Task Read_ShouldReturnFailure_WhenEmailAndPasswordDoNotMatch()
+    public async Task Read_ShouldReturnSuccess_WhenUserCredentialsExist()
     {
         // Arrange
         StarterContext dbContext = SharedFixture.CreateDatabaseContext();
+        UserCredentials existingUserCredentials = new()
+        {
+            Id = 1,
+            EmailAddress = "existinguser@example.com",
+            HashedPassword = "password",
+            UserRole = "User"
+        };
+        dbContext.UserCredentials.Add(existingUserCredentials);
+        dbContext.SaveChanges();
+
         UserCredentialsService service = new(
             _loggerMock.Object,
             dbContext,
             _fixture.AppContextAccessor);
 
         // Act
-        Result<UserCredentials> result = await service.Read("nonexistentuser@example.com", "wrongpassword");
+        Result<UserCredentials> result = await service.Read();
 
         // Assert
-        result.IsSuccess.Should().BeFalse();
-        result.Errors[0].Message.Should().Contain("User credentials does not exist.");
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeNull();
+        result.Value.EmailAddress.Should().Be("existinguser@example.com");
     }
 }

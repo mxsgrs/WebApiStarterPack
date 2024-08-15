@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -24,17 +25,18 @@ string connectionString = builder.Configuration.GetConnectionString("SqlServer")
 // Register database context as a service
 // Connect to database with connection string
 builder.Services.AddDbContext<StarterContext>(options =>
-        options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString));
 
 // AutoMapper for database models and DTOs mapping
 Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 builder.Services.AddAutoMapper(assemblies);
 
 // Add controllers and serialization
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+builder.Services.AddControllers(options =>
     {
-        //options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        // Use kebab case for endpoint URLs
+        ToKebabParameterTransformer toKebab = new();
+        options.Conventions.Add(new RouteTokenTransformerConvention(toKebab));
     })
     .ConfigureApiBehaviorOptions(options =>
     {
@@ -117,3 +119,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This project implements a web API with ASP.NET Core 8 with the most common features. It is paired with a SQL Server database using a code first approach.
-While this project use Docker for running a local database, which is very handy, the main goal is not to cover DevOps technologies. This content focus
-primarily on building a simple ASP.NET web API with the latest technologies.
+This project implements an ASP.NET Core 8 web API with the most common features. It is paired with a SQL Server database using a code first approach.
+While this project use Docker Compose for running the API and its database, the main goal is not to cover DevOps technologies. This content focus
+primarily on building a simple ASP.NET web API with the latest .NET version.
 
 ### Prerequisites
 
@@ -14,15 +14,23 @@ Before anything please install if they are not already the following elements
 
 ### Run
 
-In order to run this application
-- Execute **LocalDatabase.bat** in the root folder
-- Run **Starter.WebApi** project
+In order to run this application, set Docker Compose as start up project and click on run. According to its configuration, Docker Compose will create a
+**container for the API** based on the corresponding project and an other **container for a SQL Server database** based on a Microsoft official image. 
+EntityFramework migrations will be applied at runtime to the database.
+
+Inside the web API project there is a folder which contains **predefined HTTP requests**. First request should create a new user with **UserCredentials.http**.
+Once it's done JWT can be generated with **Authentication.http**, then authorized endpoints can be accessed and so on.
+
+### Tests
+
+Of course this solution includes unit tests and integration tests for this application. Note that **integration tests use a containerized database** by leveraging 
+the **Testcontainers** nuget package.
 
 ## Features
 
 ### Services and dependency injection pattern
 
-If you inspect old projects, you might find **most of the code inside controllers**. After all this it what **MVC** means. As practices have evolved,
+If you inspect old projects, you might find **most of the code inside controllers**, after all this it what **MVC** means. As practices have evolved,
 it is now recommended to implement business logic in what we call **services**. 
 
 Once this is done, services can be injected in controllers but also in other services. Where previously the business logic contained in a
@@ -42,8 +50,8 @@ public static class DependencyInjectionSetup
 }
 ```
 
-This method is called in **Program.cs** like this `builder.Services.AddStarterServices()`. Once this is done, services are available in all controllers and
-services like in the following examples.
+This method is called in **Program.cs** like this `builder.Services.AddStarterServices()`. Once this is done, services are 
+**available in all controllers and services constructor** like in the following examples.
 
 ```csharp
 public class AuthenticationController(IAuthenticationService authenticationService, IMapper mapper)
@@ -57,9 +65,9 @@ public class AuthenticationService(ILogger<AuthenticationService> logger, IConfi
 
 As JWT authentication is the standard **approach** to secure a web API, it's quite a good place to start. This project implements the whole process.
 - **Send your credentials with a post requests** to an endpoint of **AuthenticationController** and get a token. 
-- Now **secured endpoints** can be accessed by adding this token to the **authorization header** of a HTTP requests.
+- Now **secured endpoints** can be accessed by adding this token to the **authorization header** of HTTP requests.
 
-JWT authentication is declared in Program.cs as following.
+JWT authentication is declared in **Program.cs** as follows.
 
 ```csharp
 builder.Services.AddAuthentication()
@@ -102,9 +110,12 @@ builder.Configuration.AddJsonFile($"appsettings.{configurationName}.json");
 
 ### Result pattern
 
-As **throwing exception is not right way** to handle unexpected behaviour, we prefer to return an error instead. This can be done using what
-is called the **result pattern**. In this project I am using the **FluentResults** nuget package to implement this pattern. Here is an **example**
-of how this pattern is implemented.
+As **throwing exception is not right way** to handle an unexpected behaviour, we prefer to return a result instead. Previously an object was 
+returned in case of success and an exception was raised in case of failure but now with the **result pattern** we proceed as follows:
+- In case of success, we return a result which boolean property ```IsSuccess``` is true and also contains the data in the ```Value``` property. 
+- In case of failure, a boolean property ```IsFailed``` is true and an error message can be added to the result.
+
+This project uses the **FluentResults** nuget package to implement this pattern. Here is an **example**.
 
 ```csharp
 public async Task<Result<UserCredentials>> Read(long id)
@@ -123,9 +134,9 @@ public async Task<Result<UserCredentials>> Read(long id)
 
 Another positive aspect is to **avoid returning null objects** which make the application prone to **null exceptions**.
 
-Now that service is returning an encapsulated result, the controller must return a response. It is a good thing to
+Now that the service is returning a result, the controller must return a HTTP response. It is a good thing to
 create a method that handle this in an **abstract controller**, so it can be reused in every controller. 
-Thanks to this method, the controller always return the **HTTP response status** that match the **service result**.
+Thanks to this method, the controller always return the **HTTP response status** that matches the **service result**.
 
 ```csharp
 [NonAction]
@@ -139,6 +150,44 @@ public IActionResult CorrespondingStatus<T>(Result<T> result)
 
     return Ok(result.Value);
 }
+```
+
+### Endpoints URL convention
+
+Google specified some guidelines for URL [here](https://developers.google.com/search/docs/crawling-indexing/url-structure?hl=fr). They should be written 
+using the **kebab case** but as this is the not default behavior in an ASP.NET Core web API, some modifications are needed. First we need to define a 
+**IOutboundParameterTransformer** which will convert any value from pascal case to kebab case. In the **Utilities** folder you will find 
+**ToKebabParameterTransformer.cs** file with the following content.
+
+```csharp
+public partial class ToKebabParameterTransformer : IOutboundParameterTransformer
+{
+    public string TransformOutbound(object? value)
+    {
+        return MatchLowercaseThenUppercase()
+            .Replace(value?.ToString() ?? "", "$1-$2")
+            .ToLower();
+    }
+
+    [GeneratedRegex("([a-z])([A-Z])")]
+    private static partial Regex MatchLowercaseThenUppercase();
+}
+```
+
+Now we can add a new convention inside every controllers by modifying the **Program.cs** file like this.
+
+```csharp
+builder.Services.AddControllers(options =>
+    {
+        ToKebabParameterTransformer toKebab = new();
+        options.Conventions.Add(new RouteTokenTransformerConvention(toKebab));
+    });
+```
+
+Every endpoint URL will now use the kebab case by default.
+
+```
+/api/authentication/create-jwt-bearer
 ```
 
 ### HTTP files
@@ -187,11 +236,13 @@ See official Microsoft documentation for more information [here](https://learn.m
 
 In this example we are using a SQL Server 2022 database with a code first approach.
 
-In the first place, **connection string** of an existing database is added in **appsettings.json** as following.
+In the first place, **connection string** of an existing database is added in **appsettings.json** as follows. As we are using a 
+containerized database, IP address should not be used but the **Docker Compose service name of the database** instead. In our case this 
+is ```starter.mssql```. Its declaration is in **docker-compose.yml**, inside the root folder of this solution.
 
 ```json
 "ConnectionStrings": {
-    "SqlServer": "Data Source=localhost,1433;Initial Catalog=Starter;User=sa;Password=MatrixReloaded!;TrustServerCertificate=yes"
+    "SqlServer": "Data Source=starter.mssql;Initial Catalog=Starter;User=sa;Password=B1q22MPXUgosXiqZ;TrustServerCertificate=yes"
 }
 ```
 
@@ -203,7 +254,7 @@ string connectionString = builder.Configuration.GetConnectionString("SqlServer")
     ?? throw new Exception("Connection string is missing");
 
 builder.Services.AddDbContext<StarterContext>(options =>
-        options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString));
 ```
 
 Once all above is done, it is possible **apply this structure** to the running database. First step consist to create a new
@@ -220,76 +271,29 @@ in order to connect to the running database and **apply changes** contained in t
 dotnet ef database update
 ```
 
-### Database Docker image
+As this project use a containerized database, some unsual scenarios can happen. For example, the API is already running and a database container is 
+created. Another scenario could be with an already running database container and the API that starts running.
 
-Building a **Docker image** of the database, all migration **scripts included**, is a good choice. By leveraging the benefits of container, database 
-can be deployed **in an instant** in any environment. Anyone who get this project needs only to press run to get a web API with its fully configured
-database running in containers. Here is the following database **Dockerfile** allowing to build this image.
+In each of these scenarios we need to make sure the **migrations are applied** to the database and in case not, the application should do it. Migration 
+could be **applied at application startup** but that wouldn't cover the scenario where **database is dropped and recreated while applicaton is still running**. 
+This is why I make sure **all migrations are applied at every interaction with the database** with the following piece of code inside my **DbContext**.
 
-```dockerfile
-FROM mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
+```csharp
+public partial class StarterContext : DbContext
+{
+    public StarterContext(DbContextOptions<StarterContext> options) : base(options)
+    {
+        string? aspNetCoreEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-# Set environment variables
-ENV ACCEPT_EULA=Y
-ENV MSSQL_SA_PASSWORD=B1q22MPXUgosXiqZ
-ENV MSSQL_PID=Express
-
-# Create a config directory
-USER root
-RUN mkdir -p /usr/src/app
-RUN chown mssql /usr/src/app
-
-# Copy the initialization script to the container
-COPY *.sql /usr/src/app/
-COPY *.sh /usr/src/app/
-RUN chmod +x /usr/src/app/DbBuilder.sh
-USER mssql
-
-# Expose the SQL Server port
-EXPOSE 1433
-
-# Run the SQL Server process and the initialization script
-CMD /bin/bash /usr/src/app/DbBuilder.sh & /opt/mssql/bin/sqlservr
+        if (aspNetCoreEnvironment == "Development")
+        {
+            Database.Migrate();
+        }
+    }
 ```
 
-A **Shell script** is used to run SQL scripts in order. As you can see database need a **bit of time** before intialization scripts
-can be run.
-
-```shell
-#!/bin/bash
-# Parameters
-SQLCMD_PATH="/opt/mssql-tools18/bin/sqlcmd"
-SERVER="localhost"
-USERNAME="sa"
-PASSWORD="B1q22MPXUgosXiqZ"
-DATABASE="Starter"
-# Execution
-echo "Waiting for SQL Server to start"
-sleep 30s
-echo "Running DbCreation.sql"
-$SQLCMD_PATH -C -S $SERVER -U $USERNAME -P $PASSWORD -d master -i /usr/src/app/DbCreation.sql
-echo "Running InitialCreate.sql"
-$SQLCMD_PATH -C -S $SERVER -U $USERNAME -P $PASSWORD -d $DATABASE -i /usr/src/app/InitialCreate.sql
-```
-
-A **local instance** of the database can be run with **LocalDatabase.bat** which looks like this.
-
-```bat
-@echo off
-
-:: Pull SQL Server image
-docker pull mxsgrs/startedb:v1.0.0
-
-:: Run a SQL Server container
-docker run -p 1433:1433 --name starterdb -d mxsgrs/starterdb:v1.0.0
-```
-
-When creating a new migration, corresponding **SQL script needs to be generated** so when a new Docker image of the database
-is built, the **latest migration is included**. Use this command for generating a script based on migrations.
-
-```bash
-dotnet ef migrations script --output ./Migrations/Script.sql
-```
+As this application uses an in-memory database for unit tests, **migration should not be applied during those tests**. This is why I am checking the environment 
+name before applying or not the migrations.
 
 ### Logging
 

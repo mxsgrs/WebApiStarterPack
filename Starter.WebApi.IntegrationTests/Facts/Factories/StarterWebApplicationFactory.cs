@@ -2,11 +2,43 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Testcontainers.MsSql;
 
 namespace Starter.WebApi.IntegrationTests.Facts.Factories;
+
+public class StarterWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+{
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.ConfigureTestServices(services =>
+        {
+            services.RemoveAll(typeof(DbContextOptions<StarterContext>));
+
+            string connectionString = _dbContainer.GetConnectionString();
+            services.AddDbContext<StarterContext>(options => options
+                .UseSqlServer(connectionString));
+        });
+    }
+
+    public StarterContext MigrateDbContext()
+    {
+        IServiceScope scope = Services.CreateScope();
+        StarterContext dbContext = scope.ServiceProvider.GetRequiredService<StarterContext>();
+        dbContext.Database.Migrate();
+
+        return dbContext;
+    }
+
+    public Task InitializeAsync()
+        => _dbContainer.StartAsync();
+
+    public new Task DisposeAsync()
+        => _dbContainer.DisposeAsync().AsTask();
+}
 
 public static class Auth
 {
@@ -19,38 +51,4 @@ public static class JsonOptions
     {
         PropertyNameCaseInsensitive = true
     };
-}
-
-internal class StarterWebApplicationFactory : WebApplicationFactory<Program>
-{
-    private readonly DbInitialization? _dbInitialization;
-
-    public delegate void DbInitialization(StarterContext dbContext);
-
-    internal StarterWebApplicationFactory() { }
-
-    internal StarterWebApplicationFactory(DbInitialization dbInitialization) 
-    {
-        _dbInitialization = dbInitialization;
-    }
-
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        builder.ConfigureTestServices(services =>
-        {
-            services.RemoveAll(typeof(DbContextOptions<StarterContext>));
-
-            services.AddDbContext<StarterContext>(options => options
-                .ConfigureWarnings(warning => warning.Ignore(InMemoryEventId.TransactionIgnoredWarning))
-                .UseInMemoryDatabase("InMemoryDbForTesting"));
-
-            ServiceProvider? provider = services.BuildServiceProvider();
-            StarterContext dbContext = provider.GetRequiredService<StarterContext>();
-
-            dbContext.Database.EnsureCreated();
-            _dbInitialization?.Invoke(dbContext);
-        });
-
-        builder.UseEnvironment("Development");
-    }
 }

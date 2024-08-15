@@ -1,13 +1,16 @@
 ﻿namespace Starter.WebApi.IntegrationTests.Facts.Controllers;
 
-public class UserCredentialsControllerTests
+public class UserCredentialsControllerTests(StarterWebApplicationFactory factory)
+    : IClassFixture<StarterWebApplicationFactory>
 {
+    private readonly StarterWebApplicationFactory _factory = factory;
+
     [Fact]
     public async Task CreateOrUpdate_ShouldReturnOk_WhenUserCredentialsDoesNotExist()
     {
         // Arrange
-        StarterWebApplicationFactory factory = new();
-        HttpClient client = factory.CreateClient();
+        _factory.MigrateDbContext();
+        HttpClient client = _factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
         UserCredentialsDto userCredentialsDto = new()
         {
@@ -31,19 +34,17 @@ public class UserCredentialsControllerTests
     public async Task Read_ShouldReturnOk_WhenUserCredentialsExist()
     {
         // Arrange
-        static void AddUserCredentials(StarterContext dbContext)
+        StarterContext dbContext = _factory.MigrateDbContext();
+        UserCredentials userCredentials = new()
         {
-            UserCredentials userCredentials = new()
-            {
-                EmailAddress = "testuser@gmail.com",
-                HashedPassword = "password123",
-                UserRole = "admin"
-            };
-            dbContext.UserCredentials.Add(userCredentials);
-            dbContext.SaveChanges();
-        }
-        StarterWebApplicationFactory factory = new(AddUserCredentials);
-        HttpClient client = factory.CreateClient();
+            EmailAddress = "testuser@gmail.com",
+            HashedPassword = "password123",
+            UserRole = "admin"
+        };
+        dbContext.UserCredentials.Add(userCredentials);
+        dbContext.SaveChanges();
+
+        HttpClient client = _factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
 
         // Act

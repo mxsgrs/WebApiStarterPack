@@ -1,24 +1,25 @@
 ﻿namespace Starter.WebApi.IntegrationTests.Facts.Controllers;
 
-public class AuthenticationControllerTests
+public class AuthenticationControllerTests(StarterWebApplicationFactory factory) 
+    : IClassFixture<StarterWebApplicationFactory>
 {
+    private readonly StarterWebApplicationFactory _factory = factory;
+
     [Fact]
     public async Task CreateJwtBearer_ShouldReturnOk_WhenLoginIsSuccessful()
     {
         // Arrange
-        static void AddUserCredentials(StarterContext dbContext)
+        StarterContext dbContext = _factory.MigrateDbContext();
+        UserCredentials userCredentials = new()
         {
-            UserCredentials userCredentials = new()
-            {
-                EmailAddress = "testuser@gmail.com",
-                HashedPassword = "testpasswordhash",
-                UserRole = "admin"
-            };
-            dbContext.UserCredentials.Add(userCredentials);
-            dbContext.SaveChanges();
-        }
-        StarterWebApplicationFactory factory = new(AddUserCredentials);
-        HttpClient client = factory.CreateClient();
+            EmailAddress = "testuser@gmail.com",
+            HashedPassword = "testpasswordhash",
+            UserRole = "admin"
+        };
+        dbContext.UserCredentials.Add(userCredentials);
+        dbContext.SaveChanges();
+
+        HttpClient client = _factory.CreateClient();
         HashedLoginRequest hashedLoginRequest = new()
         {
             EmailAddress = "testuser@gmail.com",
@@ -44,8 +45,8 @@ public class AuthenticationControllerTests
     public async Task CreateJwtBearer_ShouldReturnUnauthorized_WhenLoginFails()
     {
         // Arrange
-        StarterWebApplicationFactory factory = new();
-        HttpClient client = factory.CreateClient();
+        _factory.MigrateDbContext();
+        HttpClient client = _factory.CreateClient();
         HashedLoginRequest hashedLoginRequest = new()
         {
             EmailAddress = "testuser@gmail.com",

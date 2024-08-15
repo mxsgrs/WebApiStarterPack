@@ -2,41 +2,42 @@
 
 namespace Starter.WebApi.IntegrationTests.Facts.Controllers;
 
-public class UserProfileControllerTests
+public class UserProfileControllerTests(StarterWebApplicationFactory factory)
+    : IClassFixture<StarterWebApplicationFactory>
 {
+    private readonly StarterWebApplicationFactory _factory = factory;
+
     [Fact]
     public async Task CreateOrUpdate_ShouldReturnOk_WhenExistingUserProfileIsUpdated()
     {
         // Arrange
-        static void AddUserProfile(StarterContext dbContext)
+        StarterContext dbContext = _factory.MigrateDbContext();
+        UserCredentials userCredentials = new()
         {
-            UserCredentials userCredentials = new()
-            {
-                EmailAddress = "testuser@gmail.com",
-                HashedPassword = "password123",
-                UserRole = "admin"
-            };
-            dbContext.UserCredentials.Add(userCredentials);
-            dbContext.SaveChanges();
+            EmailAddress = "testuser@gmail.com",
+            HashedPassword = "password123",
+            UserRole = "admin"
+        };
+        dbContext.UserCredentials.Add(userCredentials);
+        dbContext.SaveChanges();
 
-            UserProfile userProfile = new()
-            {
-                FirstName = "Jane",
-                LastName = "Doe",
-                Birthday = new DateOnly(1992, 2, 2),
-                Gender = "Female",
-                PersonalPhone = "+1234567891",
-                PostalAddress = "456 Main St",
-                City = "Othertown",
-                ZipCode = "67890",
-                Country = "Canada",
-                UserCredentialsId = 1
-            };
-            dbContext.UserProfile.Add(userProfile);
-            dbContext.SaveChanges();
-        }
-        StarterWebApplicationFactory factory = new(AddUserProfile);
-        HttpClient client = factory.CreateClient();
+        UserProfile userProfile = new()
+        {
+            FirstName = "Jane",
+            LastName = "Doe",
+            Birthday = new DateOnly(1992, 2, 2),
+            Gender = "Female",
+            PersonalPhone = "+1234567891",
+            PostalAddress = "456 Main St",
+            City = "Othertown",
+            ZipCode = "67890",
+            Country = "Canada",
+            UserCredentialsId = 1
+        };
+        dbContext.UserProfile.Add(userProfile);
+        dbContext.SaveChanges();
+
+        HttpClient client = _factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
 
         UserProfileDto userProfileDto = new()
@@ -63,19 +64,17 @@ public class UserProfileControllerTests
     public async Task CreateOrUpdate_ShouldReturnOk_WhenNewUserProfileIsCreated()
     {
         // Arrange
-        static void AddUserCredentials(StarterContext dbContext)
+        StarterContext dbContext = _factory.MigrateDbContext();
+        UserCredentials userCredentials = new()
         {
-            UserCredentials userCredentials = new()
-            {
-                EmailAddress = "testuser@gmail.com",
-                HashedPassword = "password123",
-                UserRole = "admin"
-            };
-            dbContext.UserCredentials.Add(userCredentials);
-            dbContext.SaveChanges();
-        }
-        StarterWebApplicationFactory factory = new(AddUserCredentials);
-        HttpClient client = factory.CreateClient();
+            EmailAddress = "testuser@gmail.com",
+            HashedPassword = "password123",
+            UserRole = "admin"
+        };
+        dbContext.UserCredentials.Add(userCredentials);
+        dbContext.SaveChanges();
+
+        HttpClient client = _factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
 
         UserProfileDto userProfileDto = new()
@@ -102,14 +101,12 @@ public class UserProfileControllerTests
     public async Task Read_ShouldReturnNotFound_WhenUserProfileDoesNotExist()
     {
         // Arrange
-        static void RemoveUserProfile(StarterContext dbContext)
-        {
-            ICollection<UserProfile> profiles = [.. dbContext.UserProfile];
-            dbContext.UserProfile.RemoveRange(profiles);
-            dbContext.SaveChanges();
-        }
-        StarterWebApplicationFactory factory = new(RemoveUserProfile);
-        HttpClient client = factory.CreateClient();
+        StarterContext dbContext = _factory.MigrateDbContext();
+        ICollection<UserProfile> profiles = [.. dbContext.UserProfile];
+        dbContext.UserProfile.RemoveRange(profiles);
+        dbContext.SaveChanges();
+
+        HttpClient client = _factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
 
         // Act
@@ -123,36 +120,33 @@ public class UserProfileControllerTests
     public async Task Read_ShouldReturnOk_WhenUserProfileExists()
     {
         // Arrange
-        static void AddUserProfile(StarterContext dbContext)
+        StarterContext dbContext = _factory.MigrateDbContext();
+        UserCredentials userCredentials = new()
         {
+            EmailAddress = "testuser@gmail.com",
+            HashedPassword = "password123",
+            UserRole = "admin"
+        };
+        dbContext.UserCredentials.Add(userCredentials);
+        dbContext.SaveChanges();
 
-            UserCredentials userCredentials = new()
-            {
-                EmailAddress = "testuser@gmail.com",
-                HashedPassword = "password123",
-                UserRole = "admin"
-            };
-            dbContext.UserCredentials.Add(userCredentials);
-            dbContext.SaveChanges();
+        UserProfile userProfile = new()
+        {
+            FirstName = "Jane",
+            LastName = "Doe",
+            Birthday = new DateOnly(1992, 2, 2),
+            Gender = "Female",
+            PersonalPhone = "+1234567891",
+            PostalAddress = "456 Main St",
+            City = "Othertown",
+            ZipCode = "67890",
+            Country = "Canada",
+            UserCredentialsId = 1
+        };
+        dbContext.UserProfile.Add(userProfile);
+        dbContext.SaveChanges();
 
-            UserProfile userProfile = new()
-            {
-                FirstName = "Jane",
-                LastName = "Doe",
-                Birthday = new DateOnly(1992, 2, 2),
-                Gender = "Female",
-                PersonalPhone = "+1234567891",
-                PostalAddress = "456 Main St",
-                City = "Othertown",
-                ZipCode = "67890",
-                Country = "Canada",
-                UserCredentialsId = 1
-            };
-            dbContext.UserProfile.Add(userProfile);
-            dbContext.SaveChanges();
-        }
-        StarterWebApplicationFactory factory = new(AddUserProfile);
-        HttpClient client = factory.CreateClient();
+        HttpClient client = _factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
 
         // Act

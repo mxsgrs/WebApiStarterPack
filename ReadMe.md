@@ -195,11 +195,13 @@ See official Microsoft documentation for more information [here](https://learn.m
 
 In this example we are using a SQL Server 2022 database with a code first approach.
 
-In the first place, **connection string** of an existing database is added in **appsettings.json** as following.
+In the first place, **connection string** of an existing database is added in **appsettings.json** as following. As we are using a 
+containerized database, IP address should not be used but the **Docker Compose service name of the database** instead. In our case this 
+is ```starter.mssql```. Its declaration is in **docker-compose.yml**, inside the root folder of this solution.
 
 ```json
 "ConnectionStrings": {
-    "SqlServer": "Data Source=localhost,1433;Initial Catalog=Starter;User=sa;Password=MatrixReloaded!;TrustServerCertificate=yes"
+    "SqlServer": "Data Source=starter.mssql;Initial Catalog=Starter;User=sa;Password=B1q22MPXUgosXiqZ;TrustServerCertificate=yes"
 }
 ```
 
@@ -211,7 +213,7 @@ string connectionString = builder.Configuration.GetConnectionString("SqlServer")
     ?? throw new Exception("Connection string is missing");
 
 builder.Services.AddDbContext<StarterContext>(options =>
-        options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString));
 ```
 
 Once all above is done, it is possible **apply this structure** to the running database. First step consist to create a new

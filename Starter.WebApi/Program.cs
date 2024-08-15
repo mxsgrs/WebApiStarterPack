@@ -25,7 +25,7 @@ string connectionString = builder.Configuration.GetConnectionString("SqlServer")
 // Register database context as a service
 // Connect to database with connection string
 builder.Services.AddDbContext<StarterContext>(options =>
-        options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString));
 
 // AutoMapper for database models and DTOs mapping
 Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();

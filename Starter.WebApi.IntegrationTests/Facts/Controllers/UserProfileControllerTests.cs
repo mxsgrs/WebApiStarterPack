@@ -37,8 +37,7 @@ public class UserProfileControllerTests(StarterWebApplicationFactory factory)
         dbContext.UserProfile.Add(userProfile);
         dbContext.SaveChanges();
 
-        HttpClient client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
+        HttpClient client = _factory.CreateAuthorizedClient();
 
         UserProfileDto userProfileDto = new()
         {
@@ -74,8 +73,7 @@ public class UserProfileControllerTests(StarterWebApplicationFactory factory)
         dbContext.UserCredentials.Add(userCredentials);
         dbContext.SaveChanges();
 
-        HttpClient client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
+        HttpClient client = _factory.CreateAuthorizedClient();
 
         UserProfileDto userProfileDto = new()
         {
@@ -106,8 +104,7 @@ public class UserProfileControllerTests(StarterWebApplicationFactory factory)
         dbContext.UserProfile.RemoveRange(profiles);
         dbContext.SaveChanges();
 
-        HttpClient client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
+        HttpClient client = _factory.CreateAuthorizedClient();
 
         // Act
         HttpResponseMessage response = await client.GetAsync("/api/user-profile/read");
@@ -146,8 +143,7 @@ public class UserProfileControllerTests(StarterWebApplicationFactory factory)
         dbContext.UserProfile.Add(userProfile);
         dbContext.SaveChanges();
 
-        HttpClient client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
+        HttpClient client = _factory.CreateAuthorizedClient();
 
         // Act
         HttpResponseMessage response = await client.GetAsync("/api/user-profile/read");

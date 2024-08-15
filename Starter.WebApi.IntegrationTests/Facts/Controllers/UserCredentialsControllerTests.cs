@@ -48,8 +48,7 @@ public class UserCredentialsControllerTests(StarterWebApplicationFactory factory
         dbContext.UserCredentials.Add(userCredentials);
         dbContext.SaveChanges();
 
-        HttpClient client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
+        HttpClient client = _factory.CreateAuthorizedClient();
         UserCredentialsDto userCredentialsDto = new()
         {
             EmailAddress = "anothertest@gmail.com",
@@ -77,8 +76,7 @@ public class UserCredentialsControllerTests(StarterWebApplicationFactory factory
         dbContext.UserCredentials.RemoveRange(userCredentials);
         dbContext.SaveChanges();
 
-        HttpClient client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
+        HttpClient client = _factory.CreateAuthorizedClient();
 
         // Act
         HttpResponseMessage response = await client.GetAsync("/api/user-credentials/read");
@@ -101,8 +99,7 @@ public class UserCredentialsControllerTests(StarterWebApplicationFactory factory
         dbContext.UserCredentials.Add(userCredentials);
         dbContext.SaveChanges();
 
-        HttpClient client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
+        HttpClient client = _factory.CreateAuthorizedClient();
 
         // Act
         HttpResponseMessage response = await client.GetAsync("/api/user-credentials/read");

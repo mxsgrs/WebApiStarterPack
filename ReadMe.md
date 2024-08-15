@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This project implements a web API with ASP.NET Core 8 with the most common features. It is paired with a SQL Server database using a code first approach.
+This project implements an ASP.NET Core 8 web API with the most common features. It is paired with a SQL Server database using a code first approach.
 While this project use Docker Compose for running the API and its database, the main goal is not to cover DevOps technologies. This content focus
-primarily on building a simple ASP.NET web API with the latest technologies.
+primarily on building a simple ASP.NET web API with the latest .NET version.
 
 ### Prerequisites
 
@@ -19,7 +19,7 @@ In order to run this application, set Docker Compose as start up project and cli
 EntityFramework migrations will be applied at runtime to the database.
 
 Inside the web API project there is a folder which contains **predefined HTTP requests**. First request should create a new user with **UserCredentials.http**.
-Once it's done JWT can be generated with **Authentication.http**, other endpoints can be accessed and so on.
+Once it's done JWT can be generated with **Authentication.http**, then authorized endpoints can be accessed and so on.
 
 ### Tests
 
@@ -30,7 +30,7 @@ the **Testcontainers** nuget package.
 
 ### Services and dependency injection pattern
 
-If you inspect old projects, you might find **most of the code inside controllers**. After all this it what **MVC** means. As practices have evolved,
+If you inspect old projects, you might find **most of the code inside controllers**, after all this it what **MVC** means. As practices have evolved,
 it is now recommended to implement business logic in what we call **services**. 
 
 Once this is done, services can be injected in controllers but also in other services. Where previously the business logic contained in a
@@ -50,8 +50,8 @@ public static class DependencyInjectionSetup
 }
 ```
 
-This method is called in **Program.cs** like this `builder.Services.AddStarterServices()`. Once this is done, services are available in all controllers and
-services like in the following examples.
+This method is called in **Program.cs** like this `builder.Services.AddStarterServices()`. Once this is done, services are 
+**available in all controllers and services constructor** like in the following examples.
 
 ```csharp
 public class AuthenticationController(IAuthenticationService authenticationService, IMapper mapper)
@@ -65,9 +65,9 @@ public class AuthenticationService(ILogger<AuthenticationService> logger, IConfi
 
 As JWT authentication is the standard **approach** to secure a web API, it's quite a good place to start. This project implements the whole process.
 - **Send your credentials with a post requests** to an endpoint of **AuthenticationController** and get a token. 
-- Now **secured endpoints** can be accessed by adding this token to the **authorization header** of a HTTP requests.
+- Now **secured endpoints** can be accessed by adding this token to the **authorization header** of HTTP requests.
 
-JWT authentication is declared in Program.cs as following.
+JWT authentication is declared in **Program.cs** as follows.
 
 ```csharp
 builder.Services.AddAuthentication()
@@ -110,9 +110,12 @@ builder.Configuration.AddJsonFile($"appsettings.{configurationName}.json");
 
 ### Result pattern
 
-As **throwing exception is not right way** to handle unexpected behaviour, we prefer to return an error instead. This can be done using what
-is called the **result pattern**. In this project I am using the **FluentResults** nuget package to implement this pattern. Here is an **example**
-of how this pattern is implemented.
+As **throwing exception is not right way** to handle an unexpected behaviour, we prefer to return a result instead. Previously an object was 
+returned in case of success and an exception was raised in case of failure but now with the **result pattern** we proceed as follows:
+- In case of success, we return a result which boolean property ```IsSuccess``` is true and also contains the data in the ```Value``` property. 
+- In case of failure, a boolean property ```IsFailed``` is true and an error message can be added to the result.
+
+This project uses the **FluentResults** nuget package to implement this pattern. Here is an **example**.
 
 ```csharp
 public async Task<Result<UserCredentials>> Read(long id)
@@ -131,9 +134,9 @@ public async Task<Result<UserCredentials>> Read(long id)
 
 Another positive aspect is to **avoid returning null objects** which make the application prone to **null exceptions**.
 
-Now that service is returning an encapsulated result, the controller must return a response. It is a good thing to
+Now that the service is returning a result, the controller must return a HTTP response. It is a good thing to
 create a method that handle this in an **abstract controller**, so it can be reused in every controller. 
-Thanks to this method, the controller always return the **HTTP response status** that match the **service result**.
+Thanks to this method, the controller always return the **HTTP response status** that matches the **service result**.
 
 ```csharp
 [NonAction]
@@ -155,7 +158,6 @@ Google specified some guidelines for URL [here](https://developers.google.com/se
 using the **kebab case** but as this is the not default behavior in an ASP.NET Core web API, some modifications are needed. First we need to define a 
 **IOutboundParameterTransformer** which will convert any value from pascal case to kebab case. In the **Utilities** folder you will find 
 **ToKebabParameterTransformer.cs** file with the following content.
-
 
 ```csharp
 public partial class ToKebabParameterTransformer : IOutboundParameterTransformer
@@ -234,7 +236,7 @@ See official Microsoft documentation for more information [here](https://learn.m
 
 In this example we are using a SQL Server 2022 database with a code first approach.
 
-In the first place, **connection string** of an existing database is added in **appsettings.json** as following. As we are using a 
+In the first place, **connection string** of an existing database is added in **appsettings.json** as follows. As we are using a 
 containerized database, IP address should not be used but the **Docker Compose service name of the database** instead. In our case this 
 is ```starter.mssql```. Its declaration is in **docker-compose.yml**, inside the root folder of this solution.
 
@@ -274,7 +276,7 @@ created. Another scenario could be with an already running database container an
 
 In each of these scenarios we need to make sure the **migrations are applied** to the database and in case not, the application should do it. Migration 
 could be **applied at application startup** but that wouldn't cover the scenario where **database is dropped and recreated while applicaton is still running**. 
-This is why I make sure **all migrations are applied at every interaction with the database** with the following piece of code, inside my **DbContext**.
+This is why I make sure **all migrations are applied at every interaction with the database** with the following piece of code inside my **DbContext**.
 
 ```csharp
 public partial class StarterContext : DbContext

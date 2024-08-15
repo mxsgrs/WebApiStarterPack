@@ -149,6 +149,45 @@ public IActionResult CorrespondingStatus<T>(Result<T> result)
 }
 ```
 
+### Endpoints URL convention
+
+Google specified some guidelines for URL [here](https://developers.google.com/search/docs/crawling-indexing/url-structure?hl=fr). They should be written 
+using the **kebab case** but as this is the not default behavior in an ASP.NET Core web API, some modifications are needed. First we need to define a 
+**IOutboundParameterTransformer** which will convert any value from pascal case to kebab case. In the **Utilities** folder you will find 
+**ToKebabParameterTransformer.cs** file with the following content.
+
+
+```csharp
+public partial class ToKebabParameterTransformer : IOutboundParameterTransformer
+{
+    public string TransformOutbound(object? value)
+    {
+        return MatchLowercaseThenUppercase()
+            .Replace(value?.ToString() ?? "", "$1-$2")
+            .ToLower();
+    }
+
+    [GeneratedRegex("([a-z])([A-Z])")]
+    private static partial Regex MatchLowercaseThenUppercase();
+}
+```
+
+Now we can add a new convention inside every controllers by modifying the **Program.cs** file like this.
+
+```csharp
+builder.Services.AddControllers(options =>
+    {
+        ToKebabParameterTransformer toKebab = new();
+        options.Conventions.Add(new RouteTokenTransformerConvention(toKebab));
+    });
+```
+
+Every endpoint URL will now use the kebab case by default.
+
+```
+/api/authentication/create-jwt-bearer
+```
+
 ### HTTP files
 
 While **Postman** is really great, having a HTTP client with all your predefined requests **inside your project** is such a handy tool. It allows to 

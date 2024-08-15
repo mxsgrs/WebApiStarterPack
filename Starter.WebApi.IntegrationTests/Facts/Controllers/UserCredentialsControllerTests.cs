@@ -6,12 +6,16 @@ public class UserCredentialsControllerTests(StarterWebApplicationFactory factory
     private readonly StarterWebApplicationFactory _factory = factory;
 
     [Fact]
-    public async Task CreateOrUpdate_ShouldReturnOk_WhenUserCredentialsDoesNotExist()
+    public async Task CreateOrUpdate_ShouldReturnOk_WhenUserCredentialsDoNotExist()
     {
         // Arrange
         _factory.MigrateDbContext();
+        StarterContext dbContext = _factory.MigrateDbContext();
+        ICollection<UserCredentials> userCredentials = [.. dbContext.UserCredentials];
+        dbContext.UserCredentials.RemoveRange(userCredentials);
+        dbContext.SaveChanges();
+
         HttpClient client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
         UserCredentialsDto userCredentialsDto = new()
         {
             EmailAddress = "testuser@gmail.com",
@@ -28,6 +32,59 @@ public class UserCredentialsControllerTests(StarterWebApplicationFactory factory
         // Assert
         response.EnsureSuccessStatusCode();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateOrUpdate_ShouldReturnOk_WhenUserCredentialsExist()
+    {
+        // Arrange
+        StarterContext dbContext = _factory.MigrateDbContext();
+        UserCredentials userCredentials = new()
+        {
+            EmailAddress = "testuser@gmail.com",
+            HashedPassword = "password123",
+            UserRole = "admin"
+        };
+        dbContext.UserCredentials.Add(userCredentials);
+        dbContext.SaveChanges();
+
+        HttpClient client = _factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
+        UserCredentialsDto userCredentialsDto = new()
+        {
+            EmailAddress = "anothertest@gmail.com",
+            HashedPassword = "password123",
+            UserRole = "admin"
+        };
+
+        string json = JsonSerializer.Serialize(userCredentialsDto);
+        StringContent content = new(json, Encoding.UTF8, "application/json");
+
+        // Act
+        HttpResponseMessage response = await client.PostAsync("/api/user-credentials/create-or-update", content);
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Read_ShouldReturnNotFound_WhenUserCredentialsDoNotExist()
+    {
+        // Arrange
+        StarterContext dbContext = _factory.MigrateDbContext();
+        ICollection<UserCredentials> userCredentials = [.. dbContext.UserCredentials];
+        dbContext.UserCredentials.RemoveRange(userCredentials);
+        dbContext.SaveChanges();
+
+        HttpClient client = _factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new("Bearer", Auth.Jwt);
+
+        // Act
+        HttpResponseMessage response = await client.GetAsync("/api/user-credentials/read");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]

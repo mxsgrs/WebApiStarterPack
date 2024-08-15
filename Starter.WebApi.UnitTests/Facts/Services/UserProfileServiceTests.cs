@@ -6,35 +6,7 @@ public class UserProfileServiceTests(SharedFixture fixture) : IClassFixture<Shar
     private readonly Mock<ILogger<UserProfileService>> _logger = new();
 
     [Fact]
-    public async Task CreateOrUpdate_ShouldReturnOk_WhenNewUserProfileIsCreated()
-    {
-        // Arrange
-        StarterContext dbContext = SharedFixture.CreateDatabaseContext();
-        UserProfileService service = new(_logger.Object, dbContext, _fixture.AppContextAccessor);
-        UserProfile newUserProfile = new()
-        {
-            FirstName = "John",
-            LastName = "Doe",
-            Birthday = new DateOnly(1990, 1, 1),
-            Gender = "Male",
-            PersonalPhone = "+1234567890",
-            PostalAddress = "123 Main St",
-            City = "Anytown",
-            ZipCode = "12345",
-            Country = "USA"
-        };
-
-        // Act
-        Result<UserProfile> result = await service.CreateOrUpdate(newUserProfile);
-
-        // Assert
-        Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Value);
-        Assert.Equal(newUserProfile.FirstName, result.Value.FirstName);
-    }
-
-    [Fact]
-    public async Task CreateOrUpdate_ShouldReturnOk_WhenExistingUserProfileIsUpdated()
+    public async Task CreateOrUpdate_ShouldReturnSuccess_WhenExistingUserProfileIsUpdated()
     {
         // Arrange
         StarterContext dbContext = SharedFixture.CreateDatabaseContext();
@@ -81,7 +53,50 @@ public class UserProfileServiceTests(SharedFixture fixture) : IClassFixture<Shar
     }
 
     [Fact]
-    public async Task Read_ShouldReturnOk_WhenUserProfileExists()
+    public async Task CreateOrUpdate_ShouldReturnSuccess_WhenNewUserProfileIsCreated()
+    {
+        // Arrange
+        StarterContext dbContext = SharedFixture.CreateDatabaseContext();
+        UserProfileService service = new(_logger.Object, dbContext, _fixture.AppContextAccessor);
+        UserProfile newUserProfile = new()
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Birthday = new DateOnly(1990, 1, 1),
+            Gender = "Male",
+            PersonalPhone = "+1234567890",
+            PostalAddress = "123 Main St",
+            City = "Anytown",
+            ZipCode = "12345",
+            Country = "USA"
+        };
+
+        // Act
+        Result<UserProfile> result = await service.CreateOrUpdate(newUserProfile);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal(newUserProfile.FirstName, result.Value.FirstName);
+    }
+
+    [Fact]
+    public async Task Read_ShouldReturnFailure_WhenUserProfileDoesNotExist()
+    {
+        // Arrange
+        StarterContext dbContext = SharedFixture.CreateDatabaseContext();
+        UserProfileService service = new(_logger.Object, dbContext, _fixture.AppContextAccessor);
+
+        // Act
+        Result<UserProfile> result = await service.Read();
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal("User profile was not found", result.Errors[0].Message);
+    }
+
+    [Fact]
+    public async Task Read_ShouldReturnSuccess_WhenUserProfileExists()
     {
         // Arrange
         StarterContext dbContext = SharedFixture.CreateDatabaseContext();
@@ -111,20 +126,5 @@ public class UserProfileServiceTests(SharedFixture fixture) : IClassFixture<Shar
         Assert.NotNull(result.Value);
         Assert.Equal("John", result.Value.FirstName);
         Assert.Equal("Smith", result.Value.LastName);
-    }
-
-    [Fact]
-    public async Task Read_ShouldReturnFail_WhenUserProfileDoesNotExist()
-    {
-        // Arrange
-        StarterContext dbContext = SharedFixture.CreateDatabaseContext();
-        UserProfileService service = new(_logger.Object, dbContext, _fixture.AppContextAccessor);
-
-        // Act
-        Result<UserProfile> result = await service.Read();
-
-        // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Equal("User profile was not found", result.Errors[0].Message);
     }
 }

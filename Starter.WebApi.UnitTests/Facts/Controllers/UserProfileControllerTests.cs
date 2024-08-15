@@ -19,7 +19,24 @@ public class UserProfileControllerTests
     }
 
     [Fact]
-    public async Task CreateOrUpdate_ShouldReturnOk_WhenUserProfileIsUpdatedSuccessfully()
+    public async Task CreateOrUpdate_ShouldReturnBadRequest_WhenServiceFails()
+    {
+        // Arrange
+        UserProfileDto userProfileDto = new();
+        Result<UserProfile> result = Result.Fail("Error");
+
+        _userProfileServiceMock.Setup(x => x.CreateOrUpdate(It.IsAny<UserProfile>()))
+            .ReturnsAsync(result);
+
+        // Act
+        IActionResult response = await _controller.CreateOrUpdate(userProfileDto);
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(response);
+    }
+
+    [Fact]
+    public async Task CreateOrUpdate_ShouldReturnOk_WhenServiceIsSuccessful()
     {
         // Arrange
         UserProfile userProfile = new()
@@ -42,7 +59,23 @@ public class UserProfileControllerTests
     }
 
     [Fact]
-    public async Task Read_ShouldReturnOk_WhenUserProfileIsReadSuccessfully()
+    public async Task Read_ShouldReturnNotFound_WhenServiceFails()
+    {
+        // Arrange
+        Result<UserProfile> result = Result.Fail("Not Found");
+
+        _userProfileServiceMock.Setup(x => x.Read())
+            .ReturnsAsync(result);
+
+        // Act
+        IActionResult response = await _controller.Read();
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(response);
+    }
+
+    [Fact]
+    public async Task Read_ShouldReturnOk_WhenServiceIsSuccessful()
     {
         // Arrange
         UserProfile userProfile = new()
@@ -61,38 +94,5 @@ public class UserProfileControllerTests
 
         // Assert
         Assert.IsType<OkObjectResult>(response);
-    }
-
-    [Fact]
-    public async Task CreateOrUpdate_ShouldReturnBadRequest_WhenServiceFails()
-    {
-        // Arrange
-        UserProfileDto userProfileDto = new();
-        Result<UserProfile> result = Result.Fail("Error");
-
-        _userProfileServiceMock.Setup(x => x.CreateOrUpdate(It.IsAny<UserProfile>()))
-            .ReturnsAsync(result);
-
-        // Act
-        IActionResult response = await _controller.CreateOrUpdate(userProfileDto);
-
-        // Assert
-        Assert.IsType<BadRequestObjectResult>(response);
-    }
-
-    [Fact]
-    public async Task Read_ShouldReturnNotFound_WhenUserProfileDoesNotExist()
-    {
-        // Arrange
-        Result<UserProfile> result = Result.Fail("Not Found");
-
-        _userProfileServiceMock.Setup(x => x.Read())
-            .ReturnsAsync(result);
-
-        // Act
-        IActionResult response = await _controller.Read();
-
-        // Assert
-        Assert.IsType<BadRequestObjectResult>(response);
     }
 }

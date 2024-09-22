@@ -23,17 +23,16 @@ public partial class StarterContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("User_pkey");
 
+            entity.HasOne(d => d.Address).WithMany(p => p.Users)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("User_AddressId_fkey");
+
             entity.HasIndex(e => e.EmailAddress).IsUnique();
         });
 
         modelBuilder.Entity<Address>(entity =>
         {
-            entity.HasKey(a => new { a.AddressLine, a.City, a.ZipCode, a.Country })
-                .HasName("Address_pkey");
-
-            entity.HasMany(d => d.Users).WithOne(p => p.Address)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Address_UserId_fkey");
+            entity.HasKey(e => e.Id).HasName("Address_pkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

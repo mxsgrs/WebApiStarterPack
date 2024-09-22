@@ -3,8 +3,13 @@ POST {{HostAddress}}/api/authentication/register
 Content-Type: application/json
 
 {
-  "emailAddress": "john.doe@gmail.com",
-  "hashedPassword": "TWF0cml4UmVsb2FkZWQh"
+    "EmailAddress": "john.doe@example.com",
+    "FirstName": "John",
+    "LastName": "Doe",
+    "Birthday": "1990-05-15",
+    "Gender": "Male",
+    "Role": "User",
+    "Phone": "123-456-7890"
 }
 
 ###
@@ -19,6 +24,6 @@ POST {{HostAddress}}/api/authentication/generate-token
 Content-Type: application/json
 
 {
-  "emailAddress": "john.doe@gmail.com",
+  "emailAddress": "john.doe@example.com",
   "hashedPassword": "TWF0cml4UmVsb2FkZWQh"
 }

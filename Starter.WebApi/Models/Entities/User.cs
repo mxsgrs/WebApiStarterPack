@@ -7,6 +7,7 @@ public class User
 
     [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email address.")]
     public string EmailAddress { get; set; } = "";
+
     public string HashedPassword { get; set; } = "";
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";
@@ -17,6 +18,8 @@ public class User
     [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "The phone number must be between 10 and 15 digits and may include a leading +.")]
     public string Phone { get; set; } = "";
 
-    [InverseProperty("User")]
+    [ForeignKey("AddressId")]
+    [InverseProperty("Users")]
     public virtual Address? Address { get; set; }
+    public long AddressId { get; set; }
 }

@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Facts\Controllers\" />
     <Folder Include="Facts\Profiles\" />
     <Folder Include="Facts\Services\" />
   </ItemGroup>

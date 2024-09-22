@@ -15,24 +15,22 @@ public partial class StarterContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<Address> Addresses { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("User_pkey");
 
-            entity.HasOne(d => d.Address).WithMany(p => p.Users)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("User_AddressId_fkey");
-
             entity.HasIndex(e => e.EmailAddress).IsUnique();
-        });
 
-        modelBuilder.Entity<Address>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("Address_pkey");
+            entity.Property(e => e.Role).HasConversion<string>();
+
+            entity.Property(e => e.Gender).HasConversion<string>();
+
+            entity.OwnsOne(x => x.UserAddress, ua =>
+            {
+                ua.ToTable("UserAddresses");
+            });
         });
 
         OnModelCreatingPartial(modelBuilder);

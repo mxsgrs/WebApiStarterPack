@@ -7,7 +7,7 @@ public class MappingProfile : Profile
         CreateMap<User, UserDto>();
         CreateMap<UserDto, User>();
 
-        CreateMap<Address, AddressDto>();
-        CreateMap<AddressDto, Address>();
+        CreateMap<UserAddress, UserAddressDto>();
+        CreateMap<UserAddressDto, UserAddress>();
     }
 }

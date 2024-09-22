@@ -12,7 +12,7 @@ using Starter.WebApi.Models.Entities;
 namespace Starter.WebApi.Models.Entities.Migrations
 {
     [DbContext(typeof(StarterContext))]
-    [Migration("20240922134333_InitialCreate")]
+    [Migration("20240922215832_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,42 +25,6 @@ namespace Starter.WebApi.Models.Entities.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Starter.WebApi.Models.Entities.Address", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("AddressLine")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressSupplement")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StateProvince")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id")
-                        .HasName("Address_pkey");
-
-                    b.ToTable("Addresses");
-                });
-
             modelBuilder.Entity("Starter.WebApi.Models.Entities.User", b =>
                 {
                     b.Property<long>("Id")
@@ -68,9 +32,6 @@ namespace Starter.WebApi.Models.Entities.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("AddressId")
-                        .HasColumnType("bigint");
 
                     b.Property<DateOnly>("Birthday")
                         .HasColumnType("date");
@@ -83,8 +44,9 @@ namespace Starter.WebApi.Models.Entities.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HashedPassword")
                         .IsRequired()
@@ -98,13 +60,12 @@ namespace Starter.WebApi.Models.Entities.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
                         .HasName("User_pkey");
-
-                    b.HasIndex("AddressId");
 
                     b.HasIndex("EmailAddress")
                         .IsUnique();
@@ -114,18 +75,42 @@ namespace Starter.WebApi.Models.Entities.Migrations
 
             modelBuilder.Entity("Starter.WebApi.Models.Entities.User", b =>
                 {
-                    b.HasOne("Starter.WebApi.Models.Entities.Address", "Address")
-                        .WithMany("Users")
-                        .HasForeignKey("AddressId")
-                        .IsRequired()
-                        .HasConstraintName("User_AddressId_fkey");
+                    b.OwnsOne("Starter.WebApi.Models.Entities.UserAddress", "UserAddress", b1 =>
+                        {
+                            b1.Property<long>("UserId")
+                                .HasColumnType("bigint");
 
-                    b.Navigation("Address");
-                });
+                            b1.Property<string>("AddressLine")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
 
-            modelBuilder.Entity("Starter.WebApi.Models.Entities.Address", b =>
-                {
-                    b.Navigation("Users");
+                            b1.Property<string>("AddressSupplement")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("StateProvince")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("ZipCode")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("UserAddresses", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("UserAddress");
                 });
 #pragma warning restore 612, 618
         }

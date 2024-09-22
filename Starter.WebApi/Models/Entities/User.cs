@@ -17,9 +17,15 @@ public class User
 
     [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "The phone number must be between 10 and 15 digits and may include a leading +.")]
     public string Phone { get; set; } = "";
+    public virtual UserAddress? UserAddress { get; set; }
+}
 
-    [ForeignKey("AddressId")]
-    [InverseProperty("Users")]
-    public virtual Address? Address { get; set; }
-    public long AddressId { get; set; }
+public class UserAddress
+{
+    public string AddressLine { get; set; } = "";
+    public string? AddressSupplement { get; set; }
+    public string City { get; set; } = "";
+    public string ZipCode { get; set; } = "";
+    public string? StateProvince { get; set; }
+    public string Country { get; set; } = "";
 }

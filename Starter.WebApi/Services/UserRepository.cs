@@ -12,16 +12,14 @@ public class UserRepository(ILogger<UserRepository> logger, StarterContext dbCon
     /// </summary>
     public async Task<Result<User>> CreateOrUpdate(User user)
     {
-        long userCredentialsId = _appContextAccessor.UserClaims.Id;
+        long id = _appContextAccessor.UserClaims.Id;
 
-        User? existing = await _dbContext.Users
-            .FirstOrDefaultAsync(credentials => credentials.Id == userCredentialsId);
+        User? existing = await _dbContext.Users.FindAsync(id);
 
         if (existing is null)
         {
             _logger.LogInformation("Creating user credentials {User}", user);
 
-            // Exclude important fields and update the rest
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 
@@ -31,10 +29,7 @@ public class UserRepository(ILogger<UserRepository> logger, StarterContext dbCon
         {
             _logger.LogInformation("Updating user credentials {Existing}", existing);
 
-            // Exclude important fields and update the rest
-            existing.EmailAddress = user.EmailAddress;
-            existing.HashedPassword = user.HashedPassword;
-            existing.Role = user.Role;
+            _dbContext.Entry(existing).CurrentValues.SetValues(user);
             _dbContext.SaveChanges();
 
             return Result.Ok(existing);
@@ -48,8 +43,7 @@ public class UserRepository(ILogger<UserRepository> logger, StarterContext dbCon
     {
         long id = _appContextAccessor.UserClaims.Id;
 
-        User? user = await _dbContext.Users
-            .FirstOrDefaultAsync(item => item.Id == id);
+        User? user = await _dbContext.Users.FindAsync(id);
 
         if (user is null)
         {

@@ -3,19 +3,30 @@ POST {{HostAddress}}/api/authentication/register
 Content-Type: application/json
 
 {
-    "EmailAddress": "john.doe@example.com",
-    "FirstName": "John",
-    "LastName": "Doe",
-    "Birthday": "1990-05-15",
-    "Gender": "Male",
-    "Role": "User",
-    "Phone": "123-456-7890"
+  "emailAddress": "john.doe@example.com",
+  "hashedPassword": "TWF0cml4UmVsb2FkZWQh",
+  "firstName": "John",
+  "lastName": "Doe",
+  "birthday": "1990-05-15",
+  "gender": "Male",
+  "role": "Admin",
+  "phone": "+1234567890",
+  "userAddress": {
+    "addressLine": "123 Main St",
+    "addressSupplement": "Apt 4B",
+    "city": "Anytown",
+    "zipCode": "12345",
+    "stateProvince": "CA",
+    "country": "USA"
+  }
 }
+
 
 ###
 
 # Read an existing user information
 GET {{HostAddress}}/api/authentication/profile
+Authorization: Bearer {{Jwt}}
 
 ###
 

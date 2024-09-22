@@ -27,7 +27,8 @@ public class JsonWebTokenService(ILogger<JsonWebTokenService> logger, IConfigura
         }
 
         JsonWebTokenParameters jwtParameters = _configuration
-            .GetRequiredSection("Jwt").Get<JsonWebTokenParameters>()
+            .GetRequiredSection("JsonWebTokenParameters")
+            .Get<JsonWebTokenParameters>()
                 ?? throw new Exception("JWT settings are not configured");
 
         byte[] encodedKey = Encoding.ASCII.GetBytes(jwtParameters.Key);

@@ -14,7 +14,9 @@ public class UserRepository(ILogger<UserRepository> logger, StarterContext dbCon
     {
         long id = _appContextAccessor.UserClaims.Id;
 
-        User? existing = await _dbContext.Users.FindAsync(id);
+        User? existing = await _dbContext.Users.FindAsync(id) ?? 
+            await _dbContext.Users.FirstOrDefaultAsync(item => item.EmailAddress 
+                == user.EmailAddress);
 
         if (existing is null)
         {
@@ -29,7 +31,15 @@ public class UserRepository(ILogger<UserRepository> logger, StarterContext dbCon
         {
             _logger.LogInformation("Updating user credentials {Existing}", existing);
 
+            user.Id = existing.Id;
             _dbContext.Entry(existing).CurrentValues.SetValues(user);
+
+            // Update the user address as owned types are not updated by default
+            if (user.UserAddress is not null && existing.UserAddress is not null)
+            {
+                _dbContext.Entry(existing.UserAddress).CurrentValues.SetValues(user.UserAddress);
+            }
+
             _dbContext.SaveChanges();
 
             return Result.Ok(existing);

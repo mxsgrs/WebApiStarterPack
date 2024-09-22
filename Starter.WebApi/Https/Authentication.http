@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "emailAddress": "john.doe@example.com",
   "hashedPassword": "TWF0cml4UmVsb2FkZWQh",
-  "firstName": "John",
+  "firstName": "Bob",
   "lastName": "Doe",
   "birthday": "1990-05-15",
   "gender": "Male",
@@ -14,7 +14,7 @@ Content-Type: application/json
   "userAddress": {
     "addressLine": "123 Main St",
     "addressSupplement": "Apt 4B",
-    "city": "Anytown",
+    "city": "New York",
     "zipCode": "12345",
     "stateProvince": "CA",
     "country": "USA"

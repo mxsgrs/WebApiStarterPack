@@ -13,24 +13,27 @@ public partial class StarterContext : DbContext
         }
     }
 
-    public virtual DbSet<UserCredentials> UserCredentials { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<UserProfile> UserProfile { get; set; }
+    public virtual DbSet<Address> Addresses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<UserCredentials>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("UserCredentials_pkey");
+            entity.HasKey(e => e.Id).HasName("User_pkey");
+
+            entity.HasIndex(e => e.EmailAddress).IsUnique();
         });
 
-        modelBuilder.Entity<UserProfile>(entity =>
+        modelBuilder.Entity<Address>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("UserProfile_pkey");
+            entity.HasKey(a => new { a.AddressLine, a.City, a.ZipCode, a.Country })
+                .HasName("Address_pkey");
 
-            entity.HasOne(d => d.UserCredentials).WithMany(p => p.UserProfile)
+            entity.HasMany(d => d.Users).WithOne(p => p.Address)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("UserProfile_UserCredentialsId_fkey");
+                .HasConstraintName("Address_UserId_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

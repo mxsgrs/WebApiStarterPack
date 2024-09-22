@@ -19,7 +19,7 @@ public class AuthenticationControllerTests
 
         Result<LoginResponse> result = Result.Ok(loginResponse);
 
-        Mock<IAuthenticationService> mockAuthService = new();
+        Mock<IJsonWebTokenService> mockAuthService = new();
         mockAuthService
             .Setup(s => s.CreateJwtBearer(hashedLoginRequest))
             .ReturnsAsync(result);
@@ -47,7 +47,7 @@ public class AuthenticationControllerTests
 
         Result<LoginResponse> result = Result.Fail("Invalid credentials");
 
-        Mock<IAuthenticationService> mockAuthService = new();
+        Mock<IJsonWebTokenService> mockAuthService = new();
         mockAuthService
             .Setup(s => s.CreateJwtBearer(hashedLoginRequest))
             .ReturnsAsync(result);

@@ -21,7 +21,7 @@ public class SharedFixture
     {
         public UserClaims UserClaims { get; set; } = new()
         {
-            UserCredentialsId = 1
+            Id = 1
         };
     }
 

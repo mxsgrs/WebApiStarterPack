@@ -3,10 +3,6 @@ using System.Security.Claims;
 
 namespace Starter.WebApi.Services;
 
-/// <summary>
-/// Access to application context
-/// </summary>
-/// <param name="httpContext">Access to request HTTP context</param>
 public class AppContextAccessor(IHttpContextAccessor httpContext) : IAppContextAccessor
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContext;
@@ -22,7 +18,7 @@ public class AppContextAccessor(IHttpContextAccessor httpContext) : IAppContextA
 
             return new()
             {
-                UserCredentialsId = userCredentialsId
+                Id = userCredentialsId
             };
         }
     }

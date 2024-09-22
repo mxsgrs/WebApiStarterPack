@@ -10,13 +10,13 @@ public class AuthenticationControllerTests(StarterWebApplicationFactory factory)
     {
         // Arrange
         StarterContext dbContext = _factory.AccessDbContext();
-        UserCredentials userCredentials = new()
+        User user = new()
         {
             EmailAddress = "testuser@gmail.com",
             HashedPassword = "testpasswordhash",
-            UserRole = "admin"
+            Role = Role.Admin
         };
-        dbContext.UserCredentials.Add(userCredentials);
+        dbContext.Users.Add(user);
         dbContext.SaveChanges();
 
         HttpClient client = _factory.CreateClient();

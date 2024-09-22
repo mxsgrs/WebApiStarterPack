@@ -2,5 +2,5 @@
 
 public class UserClaims
 {
-    public long UserCredentialsId { get; set; }
+    public long Id { get; set; }
 }

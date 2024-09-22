@@ -40,4 +40,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Facts\Profiles\" />
+    <Folder Include="Facts\Services\" />
+  </ItemGroup>
+
 </Project>

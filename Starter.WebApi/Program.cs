@@ -70,8 +70,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication()
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
-        Jwt jwt = builder.Configuration.GetRequiredSection("Jwt").Get<Jwt>()
-            ?? throw new Exception("JWT settings are not configured");
+        JsonWebTokenParameters jwt = builder.Configuration
+            .GetRequiredSection("JsonWebTokenParameters")
+            .Get<JsonWebTokenParameters>() 
+                ?? throw new Exception("JWT settings are not configured");
 
         byte[] encodedKey = Encoding.ASCII.GetBytes(jwt.Key);
         SymmetricSecurityKey symmetricSecurityKey = new(encodedKey);
@@ -102,13 +104,13 @@ WebApplication app = builder.Build();
 
 app.UseSwagger(options =>
 {
-    options.RouteTemplate = "swagger/{documentname}/swagger.json";
+    options.RouteTemplate = "api/swagger/{documentname}/swagger.json";
 });
 
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint($"/swagger/{version}/swagger.json", version);
-    options.RoutePrefix = "swagger";
+    options.SwaggerEndpoint($"/api/swagger/{version}/swagger.json", version);
+    options.RoutePrefix = "api/swagger";
 });
 
 app.UseHttpsRedirection();

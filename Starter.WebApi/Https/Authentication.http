@@ -1,5 +1,21 @@
+# Register a new user
+POST {{HostAddress}}/api/authentication/register
+Content-Type: application/json
+
+{
+  "emailAddress": "john.doe@gmail.com",
+  "hashedPassword": "TWF0cml4UmVsb2FkZWQh"
+}
+
+###
+
+# Read an existing user information
+GET {{HostAddress}}/api/authentication/profile
+
+###
+
 # Generate access token
-POST {{HostAddress}}/api/authentication/create-jwt-bearer
+POST {{HostAddress}}/api/authentication/generate-token
 Content-Type: application/json
 
 {

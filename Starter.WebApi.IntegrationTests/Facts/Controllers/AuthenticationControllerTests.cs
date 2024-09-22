@@ -9,7 +9,7 @@ public class AuthenticationControllerTests(StarterWebApplicationFactory factory)
     public async Task CreateJwtBearer_ShouldReturnOk_WhenLoginIsSuccessful()
     {
         // Arrange
-        StarterContext dbContext = _factory.MigrateDbContext();
+        StarterContext dbContext = _factory.AccessDbContext();
         UserCredentials userCredentials = new()
         {
             EmailAddress = "testuser@gmail.com",
@@ -45,7 +45,6 @@ public class AuthenticationControllerTests(StarterWebApplicationFactory factory)
     public async Task CreateJwtBearer_ShouldReturnUnauthorized_WhenLoginFails()
     {
         // Arrange
-        _factory.MigrateDbContext();
         HttpClient client = _factory.CreateClient();
         HashedLoginRequest hashedLoginRequest = new()
         {

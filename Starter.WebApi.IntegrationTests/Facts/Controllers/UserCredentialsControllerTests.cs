@@ -9,8 +9,7 @@ public class UserCredentialsControllerTests(StarterWebApplicationFactory factory
     public async Task CreateOrUpdate_ShouldReturnOk_WhenUserCredentialsDoNotExist()
     {
         // Arrange
-        _factory.MigrateDbContext();
-        StarterContext dbContext = _factory.MigrateDbContext();
+        StarterContext dbContext = _factory.AccessDbContext();
         ICollection<UserCredentials> userCredentials = [.. dbContext.UserCredentials];
         dbContext.UserCredentials.RemoveRange(userCredentials);
         dbContext.SaveChanges();
@@ -38,7 +37,7 @@ public class UserCredentialsControllerTests(StarterWebApplicationFactory factory
     public async Task CreateOrUpdate_ShouldReturnOk_WhenUserCredentialsExist()
     {
         // Arrange
-        StarterContext dbContext = _factory.MigrateDbContext();
+        StarterContext dbContext = _factory.AccessDbContext();
         UserCredentials userCredentials = new()
         {
             EmailAddress = "testuser@gmail.com",
@@ -71,7 +70,7 @@ public class UserCredentialsControllerTests(StarterWebApplicationFactory factory
     public async Task Read_ShouldReturnNotFound_WhenUserCredentialsDoNotExist()
     {
         // Arrange
-        StarterContext dbContext = _factory.MigrateDbContext();
+        StarterContext dbContext = _factory.AccessDbContext();
         ICollection<UserCredentials> userCredentials = [.. dbContext.UserCredentials];
         dbContext.UserCredentials.RemoveRange(userCredentials);
         dbContext.SaveChanges();
@@ -89,7 +88,7 @@ public class UserCredentialsControllerTests(StarterWebApplicationFactory factory
     public async Task Read_ShouldReturnOk_WhenUserCredentialsExist()
     {
         // Arrange
-        StarterContext dbContext = _factory.MigrateDbContext();
+        StarterContext dbContext = _factory.AccessDbContext();
         UserCredentials userCredentials = new()
         {
             EmailAddress = "testuser@gmail.com",

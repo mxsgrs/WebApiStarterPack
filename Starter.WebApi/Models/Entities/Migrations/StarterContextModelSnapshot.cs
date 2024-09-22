@@ -8,7 +8,7 @@ using Starter.WebApi.Models.Entities;
 
 #nullable disable
 
-namespace Starter.WebApi.Migrations
+namespace Starter.WebApi.Models.Entities.Migrations
 {
     [DbContext(typeof(StarterContext))]
     partial class StarterContextModelSnapshot : ModelSnapshot

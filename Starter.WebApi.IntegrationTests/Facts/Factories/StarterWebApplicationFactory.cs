@@ -14,6 +14,8 @@ public class StarterWebApplicationFactory : WebApplicationFactory<Program>, IAsy
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Integration");
+
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(DbContextOptions<StarterContext>));
@@ -35,12 +37,10 @@ public class StarterWebApplicationFactory : WebApplicationFactory<Program>, IAsy
         return httpClient;
     }
 
-    public StarterContext MigrateDbContext()
+    public StarterContext AccessDbContext()
     {
         IServiceScope scope = Services.CreateScope();
         StarterContext dbContext = scope.ServiceProvider.GetRequiredService<StarterContext>();
-        dbContext.Database.Migrate();
-
         return dbContext;
     }
 

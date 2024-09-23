@@ -8,17 +8,15 @@ public class AuthenticationController(IMapper mapper, IUserRepository userReposi
     private readonly IJsonWebTokenService _jsonWebTokenService = jsonWebTokenService;
 
     /// <summary>
-    /// Create a new user in the database
+    /// Create a JWT based on a request
     /// </summary>
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> Register(UserDto userDto)
+    public async Task<IActionResult> GenerateToken(HashedLoginRequest hashedLoginRequest)
     {
-        User user = _mapper.Map<User>(userDto);
+        Result<LoginResponse> result = await _jsonWebTokenService.Create(hashedLoginRequest);
 
-        Result<User> result = await _userRepository.CreateOrUpdate(user);
-
-        return CorrespondingStatus<User, UserDto>(result);
+        return CorrespondingStatus(result);
     }
 
     /// <summary>
@@ -33,14 +31,16 @@ public class AuthenticationController(IMapper mapper, IUserRepository userReposi
     }
 
     /// <summary>
-    /// Create a JWT based on a request
+    /// Create a new user in the database
     /// </summary>
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> GenerateToken(HashedLoginRequest hashedLoginRequest)
+    public async Task<IActionResult> Register(UserDto userDto)
     {
-        Result<LoginResponse> result = await _jsonWebTokenService.Create(hashedLoginRequest);
+        User user = _mapper.Map<User>(userDto);
 
-        return CorrespondingStatus(result);
+        Result<User> result = await _userRepository.CreateOrUpdate(user);
+
+        return CorrespondingStatus<User, UserDto>(result);
     }
 }

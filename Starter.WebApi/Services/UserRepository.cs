@@ -15,8 +15,10 @@ public class UserRepository(ILogger<UserRepository> logger, StarterContext dbCon
         long id = _appContextAccessor.UserClaims.Id;
 
         User? existing = await _dbContext.Users.FindAsync(id) ?? 
-            await _dbContext.Users.FirstOrDefaultAsync(item => item.EmailAddress 
-                == user.EmailAddress);
+
+            // In case primary key is not known
+            await _dbContext.Users.FirstOrDefaultAsync(item => 
+                item.EmailAddress == user.EmailAddress);
 
         if (existing is null)
         {

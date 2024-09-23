@@ -261,7 +261,7 @@ Once all above is done, it is possible **apply this structure** to the running d
 migration with this PowerShell command. New .cs files describing every table will be generated in **Migrations folder**.
 
 ```bash
-dotnet ef migrations add InitialCreate
+dotnet ef migrations add InitialCreate --output-dir Models/Entities/Migrations
 ```
 
 When it's done, **migration** can be applied to the database with this command. EntityFramework will use the connection string

@@ -55,7 +55,7 @@ public class UserRepository(ILogger<UserRepository> logger, StarterContext dbCon
     {
         long id = _appContextAccessor.UserClaims.Id;
 
-        User? user = await _dbContext.Users.FindAsync(id);
+        User ? user = await _dbContext.Users.FindAsync(id);
 
         if (user is null)
         {

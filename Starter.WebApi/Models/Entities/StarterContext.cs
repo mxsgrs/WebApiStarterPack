@@ -19,7 +19,7 @@ public partial class StarterContext : DbContext
     {
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("User_pkey");
+            entity.Property(e => e.Id);
 
             entity.HasIndex(e => e.EmailAddress).IsUnique();
 

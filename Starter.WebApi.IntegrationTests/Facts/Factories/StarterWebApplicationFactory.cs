@@ -44,11 +44,11 @@ public class StarterWebApplicationFactory : WebApplicationFactory<Program>, IAsy
         return dbContext;
     }
 
-    public Task InitializeAsync()
-        => _dbContainer.StartAsync();
+    public async Task InitializeAsync()
+        => await _dbContainer.StartAsync();
 
-    public new Task DisposeAsync()
-        => _dbContainer.DisposeAsync().AsTask();
+    public new async Task DisposeAsync()
+        => await _dbContainer.DisposeAsync().AsTask();
 }
 
 public static class JsonOptions

@@ -2,7 +2,7 @@
 
 namespace Starter.WebApi.Models.DataTransferObjects;
 
-public class UserDto
+public record UserDto
 {
     [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email address.")]
     public string EmailAddress { get; set; } = "";
@@ -24,7 +24,7 @@ public class UserDto
     public UserAddressDto? UserAddress { get; set; }
 }
 
-public class UserAddressDto
+public record UserAddressDto
 {
     public string AddressLine { get; set; } = "";
     public string? AddressSupplement { get; set; }

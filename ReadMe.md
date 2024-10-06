@@ -214,9 +214,6 @@ Content-Type: application/json
 possible to attribute **a different value** to a variable for each environment. Then it is easy to **switch** between environment with the same request, 
 making the workflow even **faster**.
 
-Note that everytime this file is modified, **closing and reopening** Visual Studio is needed so changes are **taken into account**. I hope Microsoft will 
-fix this in the future.
-
 ```json
 {
   "dev": {

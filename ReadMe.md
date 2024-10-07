@@ -214,9 +214,6 @@ Content-Type: application/json
 possible to attribute **a different value** to a variable for each environment. Then it is easy to **switch** between environment with the same request, 
 making the workflow even **faster**.
 
-Note that everytime this file is modified, **closing and reopening** Visual Studio is needed so changes are **taken into account**. I hope Microsoft will 
-fix this in the future.
-
 ```json
 {
   "dev": {
@@ -261,7 +258,7 @@ Once all above is done, it is possible **apply this structure** to the running d
 migration with this PowerShell command. New .cs files describing every table will be generated in **Migrations folder**.
 
 ```bash
-dotnet ef migrations add InitialCreate
+dotnet ef migrations add InitialCreate --output-dir Models/Entities/Migrations
 ```
 
 When it's done, **migration** can be applied to the database with this command. EntityFramework will use the connection string

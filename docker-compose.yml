@@ -4,7 +4,7 @@ services:
     container_name: starter.webapi
     build:
       context: .
-      dockerfile: Starter.WebApi/Dockerfile
+      dockerfile: src/Starter.WebApi/Dockerfile
 
   starter.mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest

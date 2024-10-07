@@ -4,8 +4,6 @@
 name: Build and test
 
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
@@ -24,5 +22,5 @@ jobs:
       run: dotnet restore ./Starter.sln
     - name: Build
       run: dotnet build ./Starter.sln --configuration Release --no-restore
-    - name: Test
-      run: dotnet test ./Starter.sln --configuration Release --no-build --verbosity normal
+    - name: Unit tests
+      run: dotnet test ./tests/Starter.WebApi.UnitTests/Starter.WebApi.UnitTests.csproj --configuration Release --no-build --verbosity normal

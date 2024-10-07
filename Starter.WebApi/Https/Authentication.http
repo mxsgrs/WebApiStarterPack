@@ -1,8 +1,0 @@
-# Generate access token
-POST {{HostAddress}}/api/authentication/create-jwt-bearer
-Content-Type: application/json
-
-{
-  "emailAddress": "john.doe@gmail.com",
-  "hashedPassword": "TWF0cml4UmVsb2FkZWQh"
-}

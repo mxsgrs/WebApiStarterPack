@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Starter.Account.WebApi.Models.Entities;
 
@@ -11,9 +12,11 @@ using Starter.Account.WebApi.Models.Entities;
 namespace Starter.Account.WebApi.Models.Entities.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    partial class AccountContextModelSnapshot : ModelSnapshot
+    [Migration("20241008161058_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,11 +27,9 @@ namespace Starter.Account.WebApi.Models.Entities.Migrations
 
             modelBuilder.Entity("Starter.Account.WebApi.Models.Entities.User", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateOnly>("Birthday")
                         .HasColumnType("date");
@@ -73,8 +74,8 @@ namespace Starter.Account.WebApi.Models.Entities.Migrations
                 {
                     b.OwnsOne("Starter.Account.WebApi.Models.Entities.UserAddress", "UserAddress", b1 =>
                         {
-                            b1.Property<long>("UserId")
-                                .HasColumnType("bigint");
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("AddressLine")
                                 .IsRequired()

@@ -15,8 +15,7 @@ namespace Starter.Account.WebApi.Models.Entities.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -35,7 +34,7 @@ namespace Starter.Account.WebApi.Models.Entities.Migrations
                 name: "UserAddresses",
                 columns: table => new
                 {
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AddressLine = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AddressSupplement = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),

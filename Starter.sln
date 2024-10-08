@@ -19,11 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.Store.WebApi", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Store", "Store", "{72921948-1883-4B36-94D2-AE44210B6518}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starter.Store.Infrastructure", "src\Starter.Store.Infrastructure\Starter.Store.Infrastructure.csproj", "{5FD41F97-94E5-4CF9-A9F4-B78A2E37473B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.Store.Infrastructure", "src\Starter.Store.Infrastructure\Starter.Store.Infrastructure.csproj", "{5FD41F97-94E5-4CF9-A9F4-B78A2E37473B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starter.Store.Domain", "src\Starter.Store.Domain\Starter.Store.Domain.csproj", "{D58154AA-8BFB-416F-AE23-CE2F092D7D67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.Store.Domain", "src\Starter.Store.Domain\Starter.Store.Domain.csproj", "{D58154AA-8BFB-416F-AE23-CE2F092D7D67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starter.Store.Application", "src\Starter.Store.Application\Starter.Store.Application.csproj", "{6CB919B7-FD43-4293-A8F6-2F7AF2F5D509}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter.Store.Application", "src\Starter.Store.Application\Starter.Store.Application.csproj", "{6CB919B7-FD43-4293-A8F6-2F7AF2F5D509}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

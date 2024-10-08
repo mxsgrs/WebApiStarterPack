@@ -20,12 +20,9 @@ string configurationName = Assembly.GetExecutingAssembly()
 
 builder.Configuration.AddJsonFile($"appsettings.{configurationName}.json");
 
-if (builder.Environment.IsDevelopment())
-{
-    builder.AddServiceDefaults();
-    builder.AddSqlServerDbContext<AccountDbContext>("accountsqldb");
-}
-else if (builder.Environment.IsProduction())
+string? aspNetCoreEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+if (builder.Environment.IsProduction() || aspNetCoreEnvironment == "Integration")
 {
     // Read database connection string from application settings
     string connectionString = builder.Configuration.GetConnectionString("SqlServer")
@@ -35,6 +32,11 @@ else if (builder.Environment.IsProduction())
     // Connect to database with connection string
     builder.Services.AddDbContext<AccountDbContext>(options =>
         options.UseSqlServer(connectionString));
+}
+else if (builder.Environment.IsDevelopment())
+{
+    builder.AddServiceDefaults();
+    builder.AddSqlServerDbContext<AccountDbContext>("accountsqldb");
 }
 
 // AutoMapper for database models and DTOs mapping

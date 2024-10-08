@@ -7,11 +7,9 @@ public class UserController(IMapper mapper, IAppContextAccessor appContextAccess
     private readonly IAppContextAccessor _appContextAccessor = appContextAccessor;
     private readonly IUserRepository _userRepository = userRepository;
 
-    [HttpGet]
-    public async Task<IActionResult> ReadUser()
+    [HttpGet("{id}")]
+    public async Task<IActionResult> ReadUser(Guid id)
     {
-        Guid id = _appContextAccessor.UserClaims.Id;
-
         Result<User> result = await _userRepository.GetUser(id);
 
         return CorrespondingStatus<User, UserDto>(result);

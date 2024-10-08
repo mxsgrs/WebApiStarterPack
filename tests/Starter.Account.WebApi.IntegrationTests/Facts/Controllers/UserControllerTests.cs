@@ -48,7 +48,7 @@ public class UserControllerTests(StarterWebApplicationFactory factory)
     public async Task ReadUser_ShouldReturnOk_WhenUserExists()
     {
         // Arrange
-        AccountContext dbContext = _factory.AccessDbContext();
+        AccountDbContext dbContext = _factory.AccessDbContext();
         if (await dbContext.Users.FindAsync(1L) is null)
         {
             User user = new()

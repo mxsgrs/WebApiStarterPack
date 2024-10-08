@@ -1,8 +1,8 @@
 ﻿namespace Starter.Account.WebApi.Models.Entities;
 
-public partial class AccountContext : DbContext
+public partial class AccountDbContext : DbContext
 {
-    public AccountContext(DbContextOptions<AccountContext> options)
+    public AccountDbContext(DbContextOptions<AccountDbContext> options)
         : base(options)
     {
         string? aspNetCoreEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");

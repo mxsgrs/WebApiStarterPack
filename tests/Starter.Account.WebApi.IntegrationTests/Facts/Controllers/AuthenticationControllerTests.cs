@@ -9,7 +9,7 @@ public class AuthenticationControllerTests(StarterWebApplicationFactory factory)
     public async Task Token_ShouldReturnOk_WhenLoginIsSuccessful()
     {
         // Arrange
-        AccountContext dbContext = _factory.AccessDbContext();
+        AccountDbContext dbContext = _factory.AccessDbContext();
         if (await dbContext.Users.FindAsync(1L) is null)
         {
             User user = new()

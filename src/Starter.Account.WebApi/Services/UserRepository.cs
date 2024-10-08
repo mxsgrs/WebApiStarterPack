@@ -1,10 +1,10 @@
 ﻿namespace Starter.Account.WebApi.Services;
 
-public class UserRepository(ILogger<UserRepository> logger, AccountContext dbContext,
+public class UserRepository(ILogger<UserRepository> logger, AccountDbContext dbContext,
     IAppContextAccessor appContextAccessor) : IUserRepository
 {
     private readonly ILogger<UserRepository> _logger = logger;
-    private readonly AccountContext _dbContext = dbContext;
+    private readonly AccountDbContext _dbContext = dbContext;
     private readonly IAppContextAccessor _appContextAccessor = appContextAccessor;
 
     public async Task<Result<User>> CreateOrUpdate(User user)

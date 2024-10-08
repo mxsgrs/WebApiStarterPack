@@ -10,7 +10,7 @@ using Starter.Account.WebApi.Models.Entities;
 
 namespace Starter.Account.WebApi.Models.Entities.Migrations
 {
-    [DbContext(typeof(AccountContext))]
+    [DbContext(typeof(AccountDbContext))]
     partial class AccountContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

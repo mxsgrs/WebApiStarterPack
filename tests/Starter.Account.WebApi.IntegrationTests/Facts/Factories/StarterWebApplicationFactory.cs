@@ -17,10 +17,10 @@ public class StarterWebApplicationFactory : WebApplicationFactory<Program>, IAsy
 
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll(typeof(DbContextOptions<AccountContext>));
+            services.RemoveAll(typeof(DbContextOptions<AccountDbContext>));
 
             string connectionString = _dbContainer.GetConnectionString();
-            services.AddDbContext<AccountContext>(options => options
+            services.AddDbContext<AccountDbContext>(options => options
                 .UseSqlServer(connectionString));
         });
     }
@@ -36,10 +36,10 @@ public class StarterWebApplicationFactory : WebApplicationFactory<Program>, IAsy
         return httpClient;
     }
 
-    public AccountContext AccessDbContext()
+    public AccountDbContext AccessDbContext()
     {
         IServiceScope scope = Services.CreateScope();
-        AccountContext dbContext = scope.ServiceProvider.GetRequiredService<AccountContext>();
+        AccountDbContext dbContext = scope.ServiceProvider.GetRequiredService<AccountDbContext>();
         return dbContext;
     }
 

@@ -11,7 +11,7 @@ using Starter.Account.WebApi.Models.Entities;
 
 namespace Starter.Account.WebApi.Models.Entities.Migrations
 {
-    [DbContext(typeof(AccountContext))]
+    [DbContext(typeof(AccountDbContext))]
     [Migration("20241008091029_InitialCreate")]
     partial class InitialCreate
     {

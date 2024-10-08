@@ -24,14 +24,14 @@ public class SharedFixture
         };
     }
 
-    public static AccountContext CreateDatabaseContext()
+    public static AccountDbContext CreateDatabaseContext()
     {
-        DbContextOptions<AccountContext> options = new DbContextOptionsBuilder<AccountContext>()
+        DbContextOptions<AccountDbContext> options = new DbContextOptionsBuilder<AccountDbContext>()
             .ConfigureWarnings(warning => warning.Ignore(InMemoryEventId.TransactionIgnoredWarning))
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
 
-        return new AccountContext(options);
+        return new AccountDbContext(options);
     }
 
     public static string ReadLocalJson(string relativePath)

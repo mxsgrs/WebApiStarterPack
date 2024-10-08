@@ -11,7 +11,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
     public async Task CreateOrUpdate_ShouldReturnOk_WhenUserIsCreated()
     {
         // Arrange
-        AccountContext dbContext = SharedFixture.CreateDatabaseContext();
+        AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
         User user = new()
         {
             Id = 1,
@@ -51,7 +51,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
     public async Task CreateOrUpdate_ShouldReturnOk_WhenUserIsUpdated()
     {
         // Arrange
-        AccountContext dbContext = SharedFixture.CreateDatabaseContext();
+        AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
         User user = new()
         {
             Id = 1,
@@ -112,7 +112,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
     public async Task Read_ShouldReturnOk_WhenUserExists()
     {
         // Arrange
-        AccountContext dbContext = SharedFixture.CreateDatabaseContext();
+        AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
         User user = new()
         {
             Id = 1,
@@ -152,7 +152,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
     public async Task Read_ShouldFail_WhenUserDoesNotExist()
     {
         // Arrange
-        AccountContext dbContext = SharedFixture.CreateDatabaseContext();
+        AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
 
         UserRepository userRepository = new(_loggerMock.Object, dbContext,
             _sharedFixture.AppContextAccessor);
@@ -169,7 +169,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
     public async Task Read_ShouldReturnOk_WhenCredentialsAreCorrect()
     {
         // Arrange
-        AccountContext dbContext = SharedFixture.CreateDatabaseContext();
+        AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
         User user = new()
         {
             Id = 1,
@@ -209,7 +209,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
     public async Task Read_ShouldFail_WhenCredentialsAreIncorrect()
     {
         // Arrange
-        AccountContext dbContext = SharedFixture.CreateDatabaseContext();
+        AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
         User user = new()
         {
             Id = 1,

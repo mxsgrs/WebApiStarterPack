@@ -1,6 +1,6 @@
 ﻿namespace Starter.Account.WebApi;
 
-public static class DependencyInjectionSetup
+public static class DependencyInjection
 {
     public static void AddStarterServices(this IServiceCollection services)
     {

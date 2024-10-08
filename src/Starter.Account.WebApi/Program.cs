@@ -20,14 +20,22 @@ string configurationName = Assembly.GetExecutingAssembly()
 
 builder.Configuration.AddJsonFile($"appsettings.{configurationName}.json");
 
-// Read database connection string from application settings
-string connectionString = builder.Configuration.GetConnectionString("SqlServer")
-    ?? throw new Exception("Connection string is missing");
+if (builder.Environment.IsDevelopment())
+{
+    builder.AddServiceDefaults();
+    builder.AddSqlServerDbContext<AccountDbContext>("accountsqldb");
+}
+else if (builder.Environment.IsProduction())
+{
+    // Read database connection string from application settings
+    string connectionString = builder.Configuration.GetConnectionString("SqlServer")
+        ?? throw new Exception("Connection string is missing");
 
-// Register database context as a service
-// Connect to database with connection string
-builder.Services.AddDbContext<AccountContext>(options =>
-    options.UseSqlServer(connectionString));
+    // Register database context as a service
+    // Connect to database with connection string
+    builder.Services.AddDbContext<AccountDbContext>(options =>
+        options.UseSqlServer(connectionString));
+}
 
 // AutoMapper for database models and DTOs mapping
 Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();

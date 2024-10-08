@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-deployment
+  labels:
+    app: account-webapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: account-webapi
+  template:
+    metadata:
+      labels:
+        app: account-webapi
+    spec:
+      containers:
+      - name: account-webapi
+        image: admxdev.azurecr.io/admxaccountwebapi:latest
+        ports:
+        - containerPort: 8080

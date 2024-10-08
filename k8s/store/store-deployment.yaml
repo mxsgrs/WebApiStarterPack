@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store-deployment
+  labels:
+    app: store-webapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: store-webapi
+  template:
+    metadata:
+      labels:
+        app: store-webapi
+    spec:
+      containers:
+      - name: store-webapi
+        image: admxdev.azurecr.io/admxstorewebapi:latest
+        ports:
+        - containerPort: 8080

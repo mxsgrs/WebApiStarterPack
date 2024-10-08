@@ -1,5 +1,5 @@
 ﻿namespace Starter.Store.Infrastructure.Persistance;
 
-public class StoreDbContext
+public class StoreDbContext : DbContext
 {
 }

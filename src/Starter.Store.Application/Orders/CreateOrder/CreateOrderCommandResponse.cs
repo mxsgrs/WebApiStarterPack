@@ -1,5 +1,3 @@
 ﻿namespace Starter.Store.Application.Orders.CreateOrder;
 
-public class CreateOrderCommandResponse
-{
-}
+public record CreateOrderCommandResponse(Guid OrderId, OrderStatus Status);

@@ -2,5 +2,5 @@
 
 public interface IJsonWebTokenService
 {
-    Task<Result<LoginResponse>> Create(HashedLoginRequest hashedLoginRequest);
+    Task<Result<LoginResponse>> CreateToken(HashedLoginRequest hashedLoginRequest);
 }

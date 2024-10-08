@@ -1,6 +1,4 @@
-﻿using Starter.Account.WebApi.UnitTests.Facts.Fixtures;
-
-namespace Starter.Account.WebApi.UnitTests.Facts.Services;
+﻿namespace Starter.Account.WebApi.UnitTests.Facts.Services;
 
 public class JsonWebTokenServiceTests : IClassFixture<SharedFixture>
 {
@@ -26,11 +24,11 @@ public class JsonWebTokenServiceTests : IClassFixture<SharedFixture>
             HashedPassword = "wrongpassword"
         };
 
-        _userServiceMock.Setup(x => x.Read(loginRequest.EmailAddress, loginRequest.HashedPassword))
+        _userServiceMock.Setup(x => x.GetUser(loginRequest.EmailAddress, loginRequest.HashedPassword))
             .ReturnsAsync(Result.Fail<User>("Invalid credentials"));
 
         // Act
-        Result<LoginResponse> result = await _jwtService.Create(loginRequest);
+        Result<LoginResponse> result = await _jwtService.CreateToken(loginRequest);
 
         // Assert
         Assert.False(result.IsSuccess);
@@ -48,7 +46,7 @@ public class JsonWebTokenServiceTests : IClassFixture<SharedFixture>
         };
         User user = new()
         {
-            Id = 1,
+            Id = Guid.NewGuid(),
             EmailAddress = "john.doe@example.com",
             HashedPassword = "hashedpassword123",
             FirstName = "John",
@@ -68,11 +66,11 @@ public class JsonWebTokenServiceTests : IClassFixture<SharedFixture>
             }
         };
 
-        _userServiceMock.Setup(x => x.Read(loginRequest.EmailAddress, loginRequest.HashedPassword))
+        _userServiceMock.Setup(x => x.GetUser(loginRequest.EmailAddress, loginRequest.HashedPassword))
             .ReturnsAsync(Result.Ok(user));
 
         // Act
-        Result<LoginResponse> result = await _jwtService.Create(loginRequest);
+        Result<LoginResponse> result = await _jwtService.CreateToken(loginRequest);
 
         // Assert
         Assert.True(result.IsSuccess);

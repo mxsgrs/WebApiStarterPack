@@ -20,7 +20,7 @@ public class SharedFixture
     {
         public UserClaims UserClaims { get; set; } = new()
         {
-            Id = 1
+            Id = Guid.NewGuid()
         };
     }
 

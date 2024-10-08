@@ -26,7 +26,7 @@ public class AuthenticationControllerTests
         };
         Result<LoginResponse> result = Result.Fail("Error");
 
-        _jsonWebTokenServiceMock.Setup(s => s.Create(request)).ReturnsAsync(result);
+        _jsonWebTokenServiceMock.Setup(s => s.CreateToken(request)).ReturnsAsync(result);
 
         // Act
         IActionResult response = await _controller.Token(request);
@@ -51,7 +51,7 @@ public class AuthenticationControllerTests
         };
         Result<LoginResponse> result = Result.Ok(loginResponse);
 
-        _jsonWebTokenServiceMock.Setup(s => s.Create(request)).ReturnsAsync(result);
+        _jsonWebTokenServiceMock.Setup(s => s.CreateToken(request)).ReturnsAsync(result);
 
         // Act
         IActionResult response = await _controller.Token(request);

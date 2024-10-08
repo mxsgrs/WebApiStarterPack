@@ -1,15 +1,18 @@
 ﻿namespace Starter.Account.WebApi.Controllers;
 
-public class UserController(IMapper mapper, IUserRepository userRepository) 
+public class UserController(IMapper mapper, IAppContextAccessor appContextAccessor, IUserRepository userRepository) 
     : AccountControllerBase(mapper)
 {
     private readonly IMapper _mapper = mapper;
+    private readonly IAppContextAccessor _appContextAccessor = appContextAccessor;
     private readonly IUserRepository _userRepository = userRepository;
 
     [HttpGet]
     public async Task<IActionResult> ReadUser()
     {
-        Result<User> result = await _userRepository.Read();
+        Guid id = _appContextAccessor.UserClaims.Id;
+
+        Result<User> result = await _userRepository.GetUser(id);
 
         return CorrespondingStatus<User, UserDto>(result);
     }
@@ -20,7 +23,7 @@ public class UserController(IMapper mapper, IUserRepository userRepository)
     {
         User user = _mapper.Map<User>(userDto);
 
-        Result<User> result = await _userRepository.CreateOrUpdate(user);
+        Result<User> result = await _userRepository.CreateUser(user);
 
         return CorrespondingStatus<User, UserDto>(result);
     }

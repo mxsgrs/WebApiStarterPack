@@ -1,54 +1,23 @@
 ﻿namespace Starter.Account.WebApi.Services;
 
-public class UserRepository(ILogger<UserRepository> logger, AccountDbContext dbContext,
-    IAppContextAccessor appContextAccessor) : IUserRepository
+public class UserRepository(ILogger<UserRepository> logger, AccountDbContext dbContext) 
+    : IUserRepository
 {
     private readonly ILogger<UserRepository> _logger = logger;
     private readonly AccountDbContext _dbContext = dbContext;
-    private readonly IAppContextAccessor _appContextAccessor = appContextAccessor;
 
-    public async Task<Result<User>> CreateOrUpdate(User user)
+    public async Task<Result<User>> CreateUser(User user)
     {
-        long id = _appContextAccessor.UserClaims.Id;
+        _logger.LogInformation("Creating user credentials {User}", user);
 
-        User? existing = await _dbContext.Users.FindAsync(id) ??
+        _dbContext.Users.Add(user);
+        await _dbContext.SaveChangesAsync();
 
-            // In case primary key is not known
-            await _dbContext.Users.FirstOrDefaultAsync(item =>
-                item.EmailAddress == user.EmailAddress);
-
-        if (existing is null)
-        {
-            _logger.LogInformation("Creating user credentials {User}", user);
-
-            _dbContext.Users.Add(user);
-            _dbContext.SaveChanges();
-
-            return Result.Ok(user);
-        }
-        else
-        {
-            _logger.LogInformation("Updating user credentials {Existing}", existing);
-
-            user.Id = existing.Id;
-            _dbContext.Entry(existing).CurrentValues.SetValues(user);
-
-            // Update the user address as owned types are not updated by default
-            if (user.UserAddress is not null && existing.UserAddress is not null)
-            {
-                _dbContext.Entry(existing.UserAddress).CurrentValues.SetValues(user.UserAddress);
-            }
-
-            _dbContext.SaveChanges();
-
-            return Result.Ok(existing);
-        }
+        return Result.Ok(user);
     }
 
-    public async Task<Result<User>> Read()
+    public async Task<Result<User>> GetUser(Guid id)
     {
-        long id = _appContextAccessor.UserClaims.Id;
-
         User? user = await _dbContext.Users.FindAsync(id);
 
         if (user is null)
@@ -59,7 +28,7 @@ public class UserRepository(ILogger<UserRepository> logger, AccountDbContext dbC
         return Result.Ok(user);
     }
 
-    public async Task<Result<User>> Read(string emailAddress, string hashedPassword)
+    public async Task<Result<User>> GetUser(string emailAddress, string hashedPassword)
     {
         User? user = await _dbContext.Users
             .FirstOrDefaultAsync(item => item.EmailAddress == emailAddress
@@ -71,5 +40,33 @@ public class UserRepository(ILogger<UserRepository> logger, AccountDbContext dbC
         }
 
         return Result.Ok(user);
+    }
+
+    public async Task<Result<User>> UpdateUser(Guid id, User user)
+    {
+        User? existing = await _dbContext.Users.FindAsync(id) ??
+            await _dbContext.Users.FirstOrDefaultAsync(item =>
+                item.EmailAddress == user.EmailAddress);
+
+        if (existing is null)
+        {
+            _logger.LogInformation("User with email {Email} not found", user.EmailAddress);
+            return Result.Fail("User not found");
+        }
+
+        _logger.LogInformation("Updating user credentials {Existing}", existing);
+
+        user.Id = existing.Id;
+        _dbContext.Entry(existing).CurrentValues.SetValues(user);
+
+        // Update the user address as owned types are not updated by default
+        if (user.UserAddress is not null && existing.UserAddress is not null)
+        {
+            _dbContext.Entry(existing.UserAddress).CurrentValues.SetValues(user.UserAddress);
+        }
+
+        await _dbContext.SaveChangesAsync();
+
+        return Result.Ok(existing);
     }
 }

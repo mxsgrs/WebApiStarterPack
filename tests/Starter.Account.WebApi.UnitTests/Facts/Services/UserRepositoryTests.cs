@@ -1,20 +1,17 @@
-﻿using Starter.Account.WebApi.UnitTests.Facts.Fixtures;
+﻿namespace Starter.Account.WebApi.UnitTests.Facts.Services;
 
-namespace Starter.Account.WebApi.UnitTests.Facts.Services;
-
-public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<SharedFixture>
+public class UserRepositoryTests
 {
     private readonly Mock<ILogger<UserRepository>> _loggerMock = new();
-    private readonly SharedFixture _sharedFixture = sharedFixture;
 
     [Fact]
-    public async Task CreateOrUpdate_ShouldReturnOk_WhenUserIsCreated()
+    public async Task CreateUser_ShouldReturnOk_WhenUserIsCreated()
     {
         // Arrange
         AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
         User user = new()
         {
-            Id = 1,
+            Id = Guid.NewGuid(),
             EmailAddress = "john.doe@example.com",
             HashedPassword = "hashedpassword123",
             FirstName = "John",
@@ -33,14 +30,11 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
                 Country = "Country"
             }
         };
-        dbContext.Users.Add(user);
-        dbContext.SaveChanges();
 
-        UserRepository userRepository = new(_loggerMock.Object, dbContext,
-            _sharedFixture.AppContextAccessor);
+        UserRepository userRepository = new(_loggerMock.Object, dbContext);
 
         // Act
-        Result<User> result = await userRepository.CreateOrUpdate(user);
+        Result<User> result = await userRepository.UpdateUser(Guid.NewGuid(), user);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -48,13 +42,13 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
     }
 
     [Fact]
-    public async Task CreateOrUpdate_ShouldReturnOk_WhenUserIsUpdated()
+    public async Task UpdateUser_ShouldReturnOk_WhenUserIsUpdated()
     {
         // Arrange
         AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
         User user = new()
         {
-            Id = 1,
+            Id = Guid.NewGuid(),
             EmailAddress = "john.doe@example.com",
             HashedPassword = "hashedpassword123",
             FirstName = "John",
@@ -76,8 +70,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
         dbContext.Users.Add(user);
         dbContext.SaveChanges();
 
-        UserRepository userRepository = new(_loggerMock.Object, dbContext,
-            _sharedFixture.AppContextAccessor);
+        UserRepository userRepository = new(_loggerMock.Object, dbContext);
 
         User newUser = new()
         {
@@ -101,7 +94,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
         };
 
         // Act
-        Result<User> result = await userRepository.CreateOrUpdate(newUser);
+        Result<User> result = await userRepository.UpdateUser(Guid.NewGuid(), newUser);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -115,7 +108,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
         AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
         User user = new()
         {
-            Id = 1,
+            Id = Guid.NewGuid(),
             EmailAddress = "john.doe@example.com",
             HashedPassword = "hashedpassword123",
             FirstName = "John",
@@ -137,11 +130,10 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
         dbContext.Users.Add(user);
         dbContext.SaveChanges();
 
-        UserRepository userRepository = new(_loggerMock.Object, dbContext,
-            _sharedFixture.AppContextAccessor);
+        UserRepository userRepository = new(_loggerMock.Object, dbContext);
 
         // Act
-        Result<User> result = await userRepository.Read();
+        Result<User> result = await userRepository.GetUser(Guid.NewGuid());
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -154,11 +146,10 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
         // Arrange
         AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
 
-        UserRepository userRepository = new(_loggerMock.Object, dbContext,
-            _sharedFixture.AppContextAccessor);
+        UserRepository userRepository = new(_loggerMock.Object, dbContext);
 
         // Act
-        var result = await userRepository.Read();
+        var result = await userRepository.GetUser(Guid.NewGuid());
 
         // Assert
         Assert.False(result.IsSuccess);
@@ -172,7 +163,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
         AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
         User user = new()
         {
-            Id = 1,
+            Id = Guid.NewGuid(),
             EmailAddress = "john.doe@example.com",
             HashedPassword = "hashedpassword123",
             FirstName = "John",
@@ -194,11 +185,10 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
         dbContext.Users.Add(user);
         dbContext.SaveChanges();
 
-        UserRepository userRepository = new(_loggerMock.Object, dbContext,
-            _sharedFixture.AppContextAccessor);
+        UserRepository userRepository = new(_loggerMock.Object, dbContext);
 
         // Act
-        var result = await userRepository.Read("john.doe@example.com", "hashedpassword123");
+        var result = await userRepository.GetUser("john.doe@example.com", "hashedpassword123");
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -212,7 +202,7 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
         AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
         User user = new()
         {
-            Id = 1,
+            Id = Guid.NewGuid(),
             EmailAddress = "john.doe@example.com",
             HashedPassword = "hashedpassword123",
             FirstName = "John",
@@ -234,11 +224,10 @@ public class UserRepositoryTests(SharedFixture sharedFixture) : IClassFixture<Sh
         dbContext.Users.Add(user);
         dbContext.SaveChanges();
 
-        UserRepository userRepository = new(_loggerMock.Object, dbContext,
-            _sharedFixture.AppContextAccessor);
+        UserRepository userRepository = new(_loggerMock.Object, dbContext);
 
         // Act
-        var result = await userRepository.Read("john.doe@example.com", "wrongPassword");
+        var result = await userRepository.GetUser("john.doe@example.com", "wrongPassword");
 
         // Assert
         Assert.False(result.IsSuccess);

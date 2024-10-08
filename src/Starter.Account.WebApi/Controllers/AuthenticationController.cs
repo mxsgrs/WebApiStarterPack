@@ -9,7 +9,7 @@ public class AuthenticationController(IMapper mapper, IJsonWebTokenService jsonW
     [HttpPost("token")]
     public async Task<IActionResult> Token(HashedLoginRequest hashedLoginRequest)
     {
-        Result<LoginResponse> result = await _jsonWebTokenService.Create(hashedLoginRequest);
+        Result<LoginResponse> result = await _jsonWebTokenService.CreateToken(hashedLoginRequest);
 
         return CorrespondingStatus(result);
     }

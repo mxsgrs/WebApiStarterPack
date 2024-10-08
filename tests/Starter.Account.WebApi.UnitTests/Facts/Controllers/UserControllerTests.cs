@@ -1,25 +1,26 @@
 ﻿namespace Starter.Account.WebApi.UnitTests.Facts.Controllers;
 
-public class UserControllerTests
+public class UserControllerTests : IClassFixture<SharedFixture>
 {
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly UserController _controller;
 
-    public UserControllerTests()
+    public UserControllerTests(SharedFixture sharedFixture)
     {
         _mapperMock = new Mock<IMapper>();
         _userRepositoryMock = new Mock<IUserRepository>();
-        _controller = new UserController(_mapperMock.Object, _userRepositoryMock.Object);
+        _controller = new UserController(_mapperMock.Object, sharedFixture.AppContextAccessor, 
+            _userRepositoryMock.Object);
     }
 
     [Fact]
-    public async Task Profile_ShouldReturnBadRequest_WhenReadFails()
+    public async Task GetUser_ShouldReturnBadRequest_WhenReadFails()
     {
         // Arrange
         var result = Result.Fail("Error");
 
-        _userRepositoryMock.Setup(r => r.Read()).ReturnsAsync(result);
+        _userRepositoryMock.Setup(r => r.GetUser(Guid.NewGuid())).ReturnsAsync(result);
 
         // Act
         IActionResult response = await _controller.ReadUser();
@@ -30,7 +31,7 @@ public class UserControllerTests
     }
 
     [Fact]
-    public async Task Profile_ShouldReturnOk_WhenUserExists()
+    public async Task GetUser_ShouldReturnOk_WhenUserExists()
     {
         // Arrange
         User user = new()
@@ -75,7 +76,7 @@ public class UserControllerTests
         };
         Result<User> result = Result.Ok(user);
 
-        _userRepositoryMock.Setup(r => r.Read()).ReturnsAsync(result);
+        _userRepositoryMock.Setup(r => r.GetUser(Guid.NewGuid())).ReturnsAsync(result);
         _mapperMock.Setup(m => m.Map<UserDto>(user)).Returns(userDto);
 
         // Act
@@ -87,7 +88,7 @@ public class UserControllerTests
     }
 
     [Fact]
-    public async Task Register_ShouldReturnBadRequest_WhenCreationFails()
+    public async Task CreateUser_ShouldReturnBadRequest_WhenCreationFails()
     {
         // Arrange
         User user = new()
@@ -133,7 +134,7 @@ public class UserControllerTests
         Result<User> result = Result.Fail("Error");
 
         _mapperMock.Setup(m => m.Map<User>(userDto)).Returns(user);
-        _userRepositoryMock.Setup(r => r.CreateOrUpdate(user)).ReturnsAsync(result);
+        _userRepositoryMock.Setup(r => r.CreateUser(user)).ReturnsAsync(result);
 
         // Act
         IActionResult response = await _controller.CreateUser(userDto);
@@ -144,7 +145,7 @@ public class UserControllerTests
     }
 
     [Fact]
-    public async Task Register_ShouldReturnOk_WhenUserCreated()
+    public async Task CreateUser_ShouldReturnOk_WhenUserCreated()
     {
         // Arrange
         User user = new()
@@ -190,7 +191,7 @@ public class UserControllerTests
         Result<User> result = Result.Ok(user);
 
         _mapperMock.Setup(m => m.Map<User>(userDto)).Returns(user);
-        _userRepositoryMock.Setup(r => r.CreateOrUpdate(user)).ReturnsAsync(result);
+        _userRepositoryMock.Setup(r => r.CreateUser(user)).ReturnsAsync(result);
         _mapperMock.Setup(m => m.Map<UserDto>(user)).Returns(userDto);
 
         // Act

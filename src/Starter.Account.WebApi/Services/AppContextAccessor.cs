@@ -11,11 +11,12 @@ public class AppContextAccessor(IHttpContextAccessor httpContext) : IAppContextA
     {
         get
         {
-            _ = long.TryParse(_httpContextAccessor.HttpContext?.User.FindFirstValue(JwtRegisteredClaimNames.Sub), out long userCredentialsId);
+            string? sub = _httpContextAccessor.HttpContext?.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            _ = Guid.TryParse(sub, out Guid id);
 
             return new()
             {
-                Id = userCredentialsId
+                Id = id
             };
         }
     }

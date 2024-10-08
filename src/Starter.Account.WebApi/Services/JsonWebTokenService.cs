@@ -12,11 +12,11 @@ public class JsonWebTokenService(ILogger<JsonWebTokenService> logger, IConfigura
     private readonly IConfiguration _configuration = configuration;
     private readonly IUserRepository _userService = userService;
 
-    public async Task<Result<LoginResponse>> Create(HashedLoginRequest hashedLoginRequest)
+    public async Task<Result<LoginResponse>> CreateToken(HashedLoginRequest hashedLoginRequest)
     {
         _logger.LogDebug("Hashed login request is {HashedLoginRequest}", hashedLoginRequest);
 
-        Result<long> result = await ValidateUser(hashedLoginRequest);
+        Result<Guid> result = await ValidateUser(hashedLoginRequest);
 
         if (result.IsFailed)
         {
@@ -64,9 +64,9 @@ public class JsonWebTokenService(ILogger<JsonWebTokenService> logger, IConfigura
     /// <summary>
     /// Verify the user exists in the database
     /// </summary>
-    private async Task<Result<long>> ValidateUser(HashedLoginRequest hashedLoginRequest)
+    private async Task<Result<Guid>> ValidateUser(HashedLoginRequest hashedLoginRequest)
     {
-        Result<User> result = await _userService.Read(hashedLoginRequest.EmailAddress,
+        Result<User> result = await _userService.GetUser(hashedLoginRequest.EmailAddress,
             hashedLoginRequest.HashedPassword);
 
         if (result.IsFailed)

@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: store-webapi
-        image: admxdev.azurecr.io/admxstorewebapi:latest
+        image: starterdev.azurecr.io/starterstorewebapi:latest
         ports:
         - containerPort: 8080

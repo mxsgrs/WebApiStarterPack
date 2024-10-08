@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: account-webapi
-        image: admxdev.azurecr.io/admxaccountwebapi:latest
+        image: starterdev.azurecr.io/starteraccountwebapi:latest
         ports:
         - containerPort: 8080

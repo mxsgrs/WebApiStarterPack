@@ -1,0 +1,16 @@
+﻿global using AutoMapper;
+global using FluentResults;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.EntityFrameworkCore;
+global using Starter.Account.WebApi;
+global using Starter.Account.WebApi.Controllers.Abstracts;
+global using Starter.Account.WebApi.Models.Authentication;
+global using Starter.Account.WebApi.Models.DataTransferObjects;
+global using Starter.Account.WebApi.Models.Entities;
+global using Starter.Account.WebApi.Models.Enums;
+global using Starter.Account.WebApi.Services;
+global using Starter.Account.WebApi.Services.Interfaces;
+global using Starter.Account.WebApi.Utilities;
+global using System.ComponentModel.DataAnnotations;
+global using System.ComponentModel.DataAnnotations.Schema;

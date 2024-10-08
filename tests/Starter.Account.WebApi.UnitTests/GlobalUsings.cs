@@ -1,0 +1,14 @@
+﻿global using AutoMapper;
+global using FluentResults;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.Logging;
+global using Moq;
+global using Starter.Account.WebApi.Controllers;
+global using Starter.Account.WebApi.Models.Authentication;
+global using Starter.Account.WebApi.Models.DataTransferObjects;
+global using Starter.Account.WebApi.Models.Entities;
+global using Starter.Account.WebApi.Models.Enums;
+global using Starter.Account.WebApi.Services;
+global using Starter.Account.WebApi.Services.Interfaces;
+global using Starter.Account.WebApi.UnitTests.Facts.Fixtures;

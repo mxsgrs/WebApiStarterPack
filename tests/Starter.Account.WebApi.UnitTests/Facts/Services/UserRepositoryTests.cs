@@ -34,7 +34,7 @@ public class UserRepositoryTests
         UserRepository userRepository = new(_loggerMock.Object, dbContext);
 
         // Act
-        Result<User> result = await userRepository.UpdateUser(Guid.NewGuid(), user);
+        Result<User> result = await userRepository.CreateUser(user);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -46,9 +46,10 @@ public class UserRepositoryTests
     {
         // Arrange
         AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
+        Guid id = Guid.NewGuid();
         User user = new()
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             EmailAddress = "john.doe@example.com",
             HashedPassword = "hashedpassword123",
             FirstName = "John",
@@ -94,7 +95,7 @@ public class UserRepositoryTests
         };
 
         // Act
-        Result<User> result = await userRepository.UpdateUser(Guid.NewGuid(), newUser);
+        Result<User> result = await userRepository.UpdateUser(id, newUser);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -106,9 +107,10 @@ public class UserRepositoryTests
     {
         // Arrange
         AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
+        Guid id = Guid.NewGuid();
         User user = new()
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             EmailAddress = "john.doe@example.com",
             HashedPassword = "hashedpassword123",
             FirstName = "John",
@@ -133,7 +135,7 @@ public class UserRepositoryTests
         UserRepository userRepository = new(_loggerMock.Object, dbContext);
 
         // Act
-        Result<User> result = await userRepository.GetUser(Guid.NewGuid());
+        Result<User> result = await userRepository.GetUser(id);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -145,7 +147,6 @@ public class UserRepositoryTests
     {
         // Arrange
         AccountDbContext dbContext = SharedFixture.CreateDatabaseContext();
-
         UserRepository userRepository = new(_loggerMock.Object, dbContext);
 
         // Act

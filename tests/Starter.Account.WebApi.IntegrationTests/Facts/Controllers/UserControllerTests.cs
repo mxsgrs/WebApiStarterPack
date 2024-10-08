@@ -32,7 +32,7 @@ public class UserControllerTests(StarterWebApplicationFactory factory)
         };
         string json = JsonSerializer.Serialize(userDto);
         StringContent content = new(json, Encoding.UTF8, "application/json");
-        HttpRequestMessage request = new(HttpMethod.Post, "/api/account/authentication/register")
+        HttpRequestMessage request = new(HttpMethod.Post, "/api/account/user")
         {
             Content = content
         };
@@ -76,7 +76,7 @@ public class UserControllerTests(StarterWebApplicationFactory factory)
         }
 
         HttpClient client = _factory.CreateAuthorizedClient();
-        HttpRequestMessage request = new(HttpMethod.Get, "/api/account/authentication/profile");
+        HttpRequestMessage request = new(HttpMethod.Get, "/api/account/user");
 
         // Act
         HttpResponseMessage response = await client.SendAsync(request);

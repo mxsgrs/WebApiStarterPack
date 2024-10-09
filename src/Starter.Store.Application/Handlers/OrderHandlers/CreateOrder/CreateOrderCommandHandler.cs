@@ -1,13 +1,13 @@
 ﻿using Starter.Store.Domain.Aggregates.OrderAggregate;
 
-namespace Starter.Store.Application.Orders.CreateOrder;
+namespace Starter.Store.Application.Handlers.OrderHandlers.CreateOrder;
 
-public class CreateOrderCommandHandler(IOrderRepository orderRepository) 
+public class CreateOrderCommandHandler(IOrderRepository orderRepository)
     : IRequestHandler<CreateOrderCommand, CreateOrderCommandResponse>
 {
     private readonly IOrderRepository _orderRepository = orderRepository;
 
-    public async Task<CreateOrderCommandResponse> Handle(CreateOrderCommand request, 
+    public async Task<CreateOrderCommandResponse> Handle(CreateOrderCommand request,
         CancellationToken cancellationToken)
     {
         Order order = new()

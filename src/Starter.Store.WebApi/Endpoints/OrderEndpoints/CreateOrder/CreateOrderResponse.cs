@@ -1,5 +1,5 @@
 ﻿namespace Starter.Store.WebApi.Endpoints.Orders.CreateOrder;
 
-public class CreateOrderResponse
+public record CreateOrderResponse
 {
 }

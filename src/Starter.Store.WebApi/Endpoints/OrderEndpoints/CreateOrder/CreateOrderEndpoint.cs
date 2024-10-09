@@ -1,4 +1,6 @@
-﻿namespace Starter.Store.WebApi.Endpoints.Orders.CreateOrder;
+﻿using Starter.Store.Application.Handlers.OrderHandlers.CreateOrder;
+
+namespace Starter.Store.WebApi.Endpoints.Orders.CreateOrder;
 
 public class CreateOrderEndpoint : IEndpoint
 {
@@ -7,13 +9,13 @@ public class CreateOrderEndpoint : IEndpoint
         app.MapPost("/order", async (IMapper mapper, IMediator mediator, 
             CreateOrderRequest request, CancellationToken cancellationToken) =>
         {
-            CreateOrderCommand command = mapper.Map<CreateOrderCommand>(request);
+            CreateOrderCommand command = request.Adapt<CreateOrderCommand>();
 
             CreateOrderCommandResponse commandResponse = await mediator.Send(command, cancellationToken);
 
-            CreateOrderResponse response = mapper.Map<CreateOrderResponse>(commandResponse);
+            CreateOrderResponse response = commandResponse.Adapt<CreateOrderResponse>();
 
-            return response;
+            return Results.Ok(response);
         });
     }
 }

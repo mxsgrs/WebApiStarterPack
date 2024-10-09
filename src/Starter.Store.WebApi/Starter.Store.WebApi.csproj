@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
   </ItemGroup>
@@ -18,6 +18,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Starter.ServiceDefaults\Starter.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Starter.Store.Application\Starter.Store.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Endpoints\OrderEndpoints\GetOrder\" />
+    <Folder Include="Endpoints\OrderEndpoints\UpdateOrder\" />
   </ItemGroup>
 
 </Project>

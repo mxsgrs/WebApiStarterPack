@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Starter.Store.Infrastructure.Persistance.OrderPersistence;
 
 namespace Starter.Store.Infrastructure;
 

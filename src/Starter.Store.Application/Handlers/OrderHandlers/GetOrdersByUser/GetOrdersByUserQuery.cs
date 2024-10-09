@@ -1,5 +1,3 @@
 ﻿namespace Starter.Store.Application.Handlers.OrderHandlers.GetOrdersByUser;
 
-internal class GetOrdersByUserQuery
-{
-}
+public record GetOrdersByUserQuery(Guid UserId) : IRequest<List<GetOrdersByUserQueryResponse>>;

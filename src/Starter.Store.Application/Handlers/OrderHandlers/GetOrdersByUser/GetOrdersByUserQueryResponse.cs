@@ -1,5 +1,3 @@
 ﻿namespace Starter.Store.Application.Handlers.OrderHandlers.GetOrdersByUser;
 
-internal class GetOrdersByUserQueryResponse
-{
-}
+public record GetOrdersByUserQueryResponse(Guid Id, Guid UserId, decimal TotalAmount, OrderStatus Status);

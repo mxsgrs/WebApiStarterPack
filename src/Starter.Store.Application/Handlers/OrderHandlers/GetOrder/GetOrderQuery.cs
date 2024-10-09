@@ -1,5 +1,3 @@
 ﻿namespace Starter.Store.Application.Handlers.OrderHandlers.GetOrder;
 
-internal class GetOrderQuery
-{
-}
+public record GetOrderQuery(Guid Id) : IRequest<GetOrderQueryResponse>;

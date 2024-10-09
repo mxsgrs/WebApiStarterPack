@@ -1,6 +1,4 @@
-﻿using Starter.Store.Domain.Aggregates.OrderAggregate;
-
-namespace Starter.Store.Application.Handlers.OrderHandlers.CreateOrder;
+﻿namespace Starter.Store.Application.Handlers.OrderHandlers.CreateOrder;
 
 public class CreateOrderCommandHandler(IOrderRepository orderRepository)
     : IRequestHandler<CreateOrderCommand, CreateOrderCommandResponse>
@@ -10,17 +8,11 @@ public class CreateOrderCommandHandler(IOrderRepository orderRepository)
     public async Task<CreateOrderCommandResponse> Handle(CreateOrderCommand request,
         CancellationToken cancellationToken)
     {
-        Order order = new()
-        {
-            UserId = request.UserId,
-            TotalAmount = request.TotalAmount,
-            Status = OrderStatus.Pending,
-            CreationDate = DateTime.UtcNow
-        };
+        Order order = new(request.UserId, request.TotalAmount);
 
-        Order newOrder = await _orderRepository.CreateAsync(order);
+        Order created = await _orderRepository.CreateAsync(order);
 
-        CreateOrderCommandResponse response = new(newOrder.Id, newOrder.Status);
+        CreateOrderCommandResponse response = new(created.Id, created.Status);
 
         return response;
     }

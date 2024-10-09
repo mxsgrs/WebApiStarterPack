@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Starter.Store.Application\Starter.Store.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Persistance\Migrations\" />
-  </ItemGroup>
-
 </Project>

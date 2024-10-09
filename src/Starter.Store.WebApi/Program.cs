@@ -1,6 +1,14 @@
 using Starter.Store.WebApi;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add specific configuration file for the current build configuration
+string configurationName = Assembly.GetExecutingAssembly()
+    .GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration
+        ?? throw new Exception("Can not read configuration name");
+
+builder.Configuration.AddJsonFile($"appsettings.{configurationName}.json");
 
 builder.AddServiceDefaults();
 

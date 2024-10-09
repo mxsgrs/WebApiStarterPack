@@ -34,6 +34,13 @@ public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logge
 
         switch (exception)
         {
+            // 400
+            case BadRequestException:
+                problemDetails.Status = StatusCodes.Status400BadRequest;
+                problemDetails.Title = "Bad request";
+                break;
+
+            // 404
             case NotFoundException:
                 problemDetails.Status = StatusCodes.Status404NotFound;
                 problemDetails.Title = "Not found";

@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Starter.Store.Domain.Aggregates.OrderAggregate;
-
-namespace Starter.Store.Infrastructure.Persistance.OrderPersistence;
-
+﻿namespace Starter.Store.Infrastructure.Persistance.OrderPersistence;
 public class OrderRepository(ILogger<OrderRepository> logger,
     StoreDbContext dbContext) : IOrderRepository
 {

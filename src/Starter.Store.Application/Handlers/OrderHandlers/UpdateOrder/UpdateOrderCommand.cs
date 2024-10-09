@@ -1,5 +1,3 @@
 ﻿namespace Starter.Store.Application.Handlers.OrderHandlers.UpdateOrder;
 
-internal class UpdateOrderCommand
-{
-}
+public record UpdateOrderCommand(Guid Id, Guid UserId, decimal TotalAmount, OrderStatus Status) : IRequest<UpdateOrderCommandResponse>;

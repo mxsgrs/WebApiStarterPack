@@ -1,5 +1,3 @@
 ﻿namespace Starter.Store.Application.Handlers.OrderHandlers.UpdateOrder;
 
-internal class UpdateOrderCommandResponse
-{
-}
+public record UpdateOrderCommandResponse(Guid Id, Guid UserId, decimal TotalAmount, OrderStatus Status);

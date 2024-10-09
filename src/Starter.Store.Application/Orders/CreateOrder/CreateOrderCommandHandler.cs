@@ -1,4 +1,6 @@
-﻿namespace Starter.Store.Application.Orders.CreateOrder;
+﻿using Starter.Store.Domain.Aggregates.OrderAggregate;
+
+namespace Starter.Store.Application.Orders.CreateOrder;
 
 public class CreateOrderCommandHandler(IOrderRepository orderRepository) 
     : IRequestHandler<CreateOrderCommand, CreateOrderCommandResponse>

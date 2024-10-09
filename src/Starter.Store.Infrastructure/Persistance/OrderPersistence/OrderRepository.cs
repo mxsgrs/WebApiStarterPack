@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Starter.Store.Domain.Aggregates.OrderAggregate;
 
 namespace Starter.Store.Infrastructure.Persistance.OrderPersistence;
 
@@ -29,18 +30,39 @@ public class OrderRepository(ILogger<OrderRepository> logger,
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task<Order> GetAsync(Guid id)
+    public async Task<Order> GetAsync(Guid id)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Read order {Id} in database", id);
+
+        Order order = await _dbContext.Orders.FindAsync(id)
+            ?? throw new OrderNotFoundException(id);
+
+        return order;
     }
 
-    public Task<List<Order>> GetByUserAsync(Guid userId)
+    public async Task<List<Order>> GetByUserAsync(Guid userId)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Read orders for user {UserId} in database", userId);
+
+        List<Order> orders = await _dbContext.Orders
+            .Where(order => order.UserId == userId)
+            .ToListAsync()
+                ?? throw new OrdersByUserNotFoundException(userId);
+
+        return orders;
     }
 
-    public Task<Order> UpdateAsync(Guid id, Order order)
+    public async Task<Order> UpdateAsync(Guid id, Order order)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Update order {Id} in database", id);
+
+        Order existing = await _dbContext.Orders.FindAsync(id)
+            ?? throw new OrderNotFoundException(id);
+
+        order.Id = existing.Id;
+        _dbContext.Entry(existing).CurrentValues.SetValues(order);
+        await _dbContext.SaveChangesAsync();
+
+        return existing;
     }
 }

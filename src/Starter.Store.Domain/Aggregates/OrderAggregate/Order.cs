@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Starter.Store.Domain.OrderAggregate;
+namespace Starter.Store.Domain.Aggregates.OrderAggregate;
 
-public class Order
+public class Order : IAggregateRoot
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }

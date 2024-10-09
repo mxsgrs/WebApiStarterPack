@@ -1,4 +1,6 @@
-﻿namespace Starter.Store.Infrastructure.Persistance.OrderPersistence;
+﻿using Starter.Store.Domain.Aggregates.OrderAggregate;
+
+namespace Starter.Store.Infrastructure.Persistance.OrderPersistence;
 
 internal class OrderConfiguration : IEntityTypeConfiguration<Order>
 {

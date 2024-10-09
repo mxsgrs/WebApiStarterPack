@@ -1,4 +1,4 @@
-﻿namespace Starter.Store.Domain.OrderAggregate;
+﻿namespace Starter.Store.Domain.Aggregates.OrderAggregate;
 
 public enum OrderStatus
 {

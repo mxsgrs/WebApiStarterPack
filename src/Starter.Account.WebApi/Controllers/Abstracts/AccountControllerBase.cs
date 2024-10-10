@@ -5,7 +5,7 @@
 [Route("api/account/[controller]")]
 public class AccountControllerBase(IMapper mapper) : ControllerBase
 {
-    private readonly IMapper _mapper = mapper;
+    protected readonly IMapper _mapper = mapper;
 
     #region Corresponding status
     /// <summary>

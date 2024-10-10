@@ -9,8 +9,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-
 JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 // Add specific configuration file for the current build configuration
@@ -107,7 +105,7 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc(version, new OpenApiInfo
     {
         Version = version,
-        Title = "Starter.WebApi",
+        Title = "Starter.Account.WebApi",
         Description = "Get your starter web API."
     });
 });

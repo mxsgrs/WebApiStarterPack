@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Starter.Store.WebApi.BuildingBlocks.Infrastructure;
+﻿namespace Starter.Store.WebApi.BuildingBlocks.Infrastructure;
 
 public class StoreDbContext : DbContext
 {
@@ -19,7 +17,6 @@ public class StoreDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        Assembly? infrastructureAssembly = typeof(IAssemblyMarker).Assembly;
-        modelBuilder.ApplyConfigurationsFromAssembly(infrastructureAssembly);
+        modelBuilder.ApplyConfiguration(new OrderConfiguration());
     }
 }

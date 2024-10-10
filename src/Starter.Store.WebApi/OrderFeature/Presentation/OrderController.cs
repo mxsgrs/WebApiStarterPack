@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Starter.Store.WebApi.OrderFeature.Application;
 
 namespace Starter.Store.WebApi.OrderFeature.Presentation;
 

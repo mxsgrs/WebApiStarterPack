@@ -1,3 +1,3 @@
 ﻿namespace Starter.Store.Application.Handlers.OrderHandlers.GetOrder;
 
-public record GetOrderQuery(Guid Id) : IRequest<GetOrderQueryResponse>;
+public record GetOrderQuery(OrderId Id) : IRequest<GetOrderQueryResponse>;

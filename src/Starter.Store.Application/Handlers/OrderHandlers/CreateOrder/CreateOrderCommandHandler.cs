@@ -8,7 +8,7 @@ public class CreateOrderCommandHandler(IOrderRepository orderRepository)
     public async Task<CreateOrderCommandResponse> Handle(CreateOrderCommand request,
         CancellationToken cancellationToken)
     {
-        Order order = new(request.UserId, request.TotalAmount);
+        Order order = new(new OrderId(Guid.NewGuid()), request.UserId, request.TotalAmount);
 
         Order created = await _orderRepository.CreateAsync(order);
 

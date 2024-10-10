@@ -8,7 +8,7 @@ internal class UpdateOrderCommandHandler(IOrderRepository orderRepository)
     public async Task<UpdateOrderCommandResponse> Handle(UpdateOrderCommand request, 
         CancellationToken cancellationToken)
     {
-        Order order = new(request.UserId, request.TotalAmount);
+        Order order = new(new OrderId(Guid.NewGuid()), request.UserId, request.TotalAmount);
 
         Order updated = await _orderRepository.UpdateAsync(request.Id, order);
 

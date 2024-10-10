@@ -1,5 +1,4 @@
-﻿
-namespace Starter.Store.WebApi.Endpoints.Order.GetOrdersByUser;
+﻿namespace Starter.Store.WebApi.Endpoints.OrderEndpoints.GetOrdersByUser;
 
 public class GetOrdersByUserEndpoint : IEndpoint
 {

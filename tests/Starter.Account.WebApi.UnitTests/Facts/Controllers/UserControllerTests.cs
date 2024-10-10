@@ -142,7 +142,7 @@ public class UserControllerTests : IClassFixture<SharedFixture>
             .ReturnsAsync(result);
 
         // Act
-        IActionResult response = await _controller.ReadUser();
+        IActionResult response = await _controller.ReadUser(Guid.NewGuid());
 
         // Assert
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(response);
@@ -153,8 +153,10 @@ public class UserControllerTests : IClassFixture<SharedFixture>
     public async Task GetUser_ShouldReturnOk_WhenUserExists()
     {
         // Arrange
+        Guid id = Guid.NewGuid();
         User user = new()
         {
+            Id = id,
             EmailAddress = "john.doe@example.com",
             HashedPassword = "hashedpassword123",
             FirstName = "John",
@@ -204,7 +206,7 @@ public class UserControllerTests : IClassFixture<SharedFixture>
             .Returns(userDto);
 
         // Act
-        IActionResult response = await _controller.ReadUser();
+        IActionResult response = await _controller.ReadUser(id);
 
         // Assert
         OkObjectResult? okResult = Assert.IsType<OkObjectResult>(response);

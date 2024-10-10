@@ -1,12 +1,12 @@
 ﻿using Starter.Store.Application.Handlers.OrderHandlers.CreateOrder;
 
-namespace Starter.Store.WebApi.Endpoints.Orders.CreateOrder;
+namespace Starter.Store.WebApi.Endpoints.OrderEndpoints.CreateOrder;
 
 public class CreateOrderEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/order", async (IMapper mapper, IMediator mediator, 
+        app.MapPost("/order", async (IMapper mapper, IMediator mediator,
             CreateOrderRequest request, CancellationToken cancellationToken) =>
         {
             CreateOrderCommand command = request.Adapt<CreateOrderCommand>();

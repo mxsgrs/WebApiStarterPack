@@ -1,4 +1,4 @@
-﻿namespace Starter.Store.WebApi.Endpoints.Orders.CreateOrder;
+﻿namespace Starter.Store.WebApi.Endpoints.OrderEndpoints.CreateOrder;
 
 public record CreateOrderResponse
 {

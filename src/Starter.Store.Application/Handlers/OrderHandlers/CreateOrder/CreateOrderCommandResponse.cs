@@ -1,3 +1,3 @@
 ﻿namespace Starter.Store.Application.Handlers.OrderHandlers.CreateOrder;
 
-public record CreateOrderCommandResponse(Guid OrderId, OrderStatus Status);
+public record CreateOrderCommandResponse(OrderId OrderId, OrderStatus Status);

@@ -1,14 +1,15 @@
-﻿
-namespace Starter.Store.WebApi.Endpoints.Orders.DeleteOrder
+﻿namespace Starter.Store.WebApi.Endpoints.OrderEndpoints.DeleteOrder;
+
+public class DeleteOrderEndpoint : IEndpoint
 {
-    public class DeleteOrderEndpoint : IEndpoint
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        public void MapEndpoint(IEndpointRouteBuilder app)
+        app.MapDelete("/order/{id:guid}", async (IMapper mapper, IMediator mediator, Guid id) =>
         {
-            app.MapDelete("/order/{id:guid}", async(IMapper mapper, IMediator mediator) =>
-            {
-                mediator.Send
-            });
-        }
+            OrderId orderId = new(id);
+            DeleteOrderCommand command = new(orderId);
+
+            await mediator.Send(command);
+        });
     }
 }

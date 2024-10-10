@@ -1,3 +1,3 @@
 ﻿namespace Starter.Store.Application.Handlers.OrderHandlers.CreateOrder;
 
-public record CreateOrderCommand(Guid UserId, decimal TotalAmount) : IRequest<CreateOrderCommandResponse>;
+public record CreateOrderCommand(UserId UserId, decimal TotalAmount) : IRequest<CreateOrderCommandResponse>;

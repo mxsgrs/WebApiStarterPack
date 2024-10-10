@@ -5,31 +5,31 @@ namespace Starter.Account.WebApi.Models.DataTransferObjects;
 public record UserDto
 {
     [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email address.")]
-    public string EmailAddress { get; set; } = "";
+    public string EmailAddress { get; init; } = "";
 
-    public string HashedPassword { get; set; } = "";
-    public string FirstName { get; set; } = "";
-    public string LastName { get; set; } = "";
-    public DateOnly Birthday { get; set; }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public Gender Gender { get; set; }
+    public string HashedPassword { get; init; } = "";
+    public string FirstName { get; init; } = "";
+    public string LastName { get; init; } = "";
+    public DateOnly Birthday { get; init; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public Role Role { get; set; }
+    public Gender Gender { get; init; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public Role Role { get; init; }
 
     [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "The phone number must be between 10 and 15 digits and may include a leading +.")]
-    public string Phone { get; set; } = "";
+    public string Phone { get; init; } = "";
 
-    public UserAddressDto? UserAddress { get; set; }
+    public UserAddressDto? UserAddress { get; init; }
 }
 
 public record UserAddressDto
 {
-    public string AddressLine { get; set; } = "";
-    public string? AddressSupplement { get; set; }
-    public string City { get; set; } = "";
-    public string ZipCode { get; set; } = "";
-    public string? StateProvince { get; set; }
-    public string Country { get; set; } = "";
+    public string AddressLine { get; init; } = "";
+    public string? AddressSupplement { get; init; }
+    public string City { get; init; } = "";
+    public string ZipCode { get; init; } = "";
+    public string? StateProvince { get; init; }
+    public string Country { get; init; } = "";
 }

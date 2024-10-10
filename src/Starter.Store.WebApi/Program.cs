@@ -1,4 +1,6 @@
-using Starter.Store.WebApi;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Starter.Store.WebApi.Utilities;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,8 +14,33 @@ builder.Configuration.AddJsonFile($"appsettings.{configurationName}.json");
 
 builder.AddServiceDefaults();
 
-// Add services to the container.
-builder.Services.AddEndpoints();
+// Add controllers and serialization
+builder.Services.AddControllers(options =>
+{
+    // Use kebab case for endpoint URLs
+    ToKebabParameterTransformer toKebab = new();
+    options.Conventions.Add(new RouteTokenTransformerConvention(toKebab));
+})
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        var builtInFactory = options.InvalidModelStateResponseFactory;
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            ILogger<Program> logger = context.HttpContext.RequestServices
+                .GetRequiredService<ILogger<Program>>();
+
+            IEnumerable<ModelError> errors = context.ModelState.Values
+                .SelectMany(item => item.Errors);
+
+            foreach (ModelError error in errors)
+            {
+                // Logging all invalid model states
+                logger.LogError("{ErrorMessage}", error.ErrorMessage);
+            }
+
+            return builtInFactory(context);
+        };
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -34,6 +61,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapEndpoints();
+app.MapControllers();
 
 app.Run();

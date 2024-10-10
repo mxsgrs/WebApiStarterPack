@@ -1,4 +1,5 @@
 ﻿namespace Starter.Store.Infrastructure.Persistance.OrderPersistence;
+
 public class OrderRepository(ILogger<OrderRepository> logger,
     StoreDbContext dbContext) : IOrderRepository
 {
@@ -26,7 +27,7 @@ public class OrderRepository(ILogger<OrderRepository> logger,
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Order> GetAsync(OrderId id)
+    public async Task<Order> ReadAsync(OrderId id)
     {
         _logger.LogInformation("Read order {Id} in database", id.Value);
 
@@ -36,7 +37,7 @@ public class OrderRepository(ILogger<OrderRepository> logger,
         return order;
     }
 
-    public async Task<List<Order>> GetByUserAsync(UserId userId)
+    public async Task<List<Order>> ReadByUserAsync(UserId userId)
     {
         _logger.LogInformation("Read orders for user {UserId} in database", userId.Value);
 

@@ -1,21 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Starter.Store.WebApi.BuildingBlocks.Presentation;
-using Starter.Store.WebApi.OrderFeature.Infrastructure;
+using Starter.Store.WebApi.OrderFeature.Application;
 
 namespace Starter.Store.WebApi.OrderFeature.Presentation;
 
-public class OrderController(IMapper mapper, IOrderRepository orderRepository) : StoreControllerBase(mapper)
+public class OrderController(IMapper mapper, IOrderService orderService) : StoreControllerBase(mapper)
 {
-    private readonly IOrderRepository _orderRepository = orderRepository;
+    private readonly IOrderService _orderService = orderService;
 
     [HttpPost]
     public async Task<IActionResult> CreateOrder(OrderDto orderDto)
     {
-        Order order = _mapper.Map<Order>(orderDto);
-
-        Order created = await _orderRepository.CreateAsync(order);
-
-        OrderDto createdDto = _mapper.Map<OrderDto>(created);
+        OrderDto createdDto = await _orderService.CreateOrderAsync(orderDto);
 
         return Ok(createdDto);
     }
@@ -23,7 +18,7 @@ public class OrderController(IMapper mapper, IOrderRepository orderRepository) :
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteOrder(Guid id)
     {
-        await _orderRepository.DeleteAsync(new(id));
+        await _orderService.DeleteOrderAsync(id);
 
         return NoContent();
     }
@@ -31,9 +26,7 @@ public class OrderController(IMapper mapper, IOrderRepository orderRepository) :
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> ReadOrder(Guid id)
     {
-        Order order = await _orderRepository.ReadAsync(new(id));
-
-        OrderDto orderDto = _mapper.Map<OrderDto>(order);
+        OrderDto orderDto = await _orderService.GetOrderByIdAsync(id);
 
         return Ok(orderDto);
     }
@@ -41,9 +34,7 @@ public class OrderController(IMapper mapper, IOrderRepository orderRepository) :
     [HttpGet("/api/store/user/{userId:guid}/orders")]
     public async Task<IActionResult> ReadOrderByUser(Guid userId)
     {
-        List<Order> orders = await _orderRepository.ReadByUserAsync(new(userId));
-
-        List<OrderDto> orderDtos = orders.Select(_mapper.Map<OrderDto>).ToList();
+        List<OrderDto> orderDtos = await _orderService.GetOrdersByUserAsync(userId);
 
         return Ok(orderDtos);
     }
@@ -51,11 +42,7 @@ public class OrderController(IMapper mapper, IOrderRepository orderRepository) :
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> UpdateOrder(Guid id, OrderDto orderDto)
     {
-        Order order = _mapper.Map<Order>(orderDto);
-
-        Order updated = await _orderRepository.UpdateAsync(new(id), order);
-
-        OrderDto updatedDto = _mapper.Map<OrderDto>(updated);
+        OrderDto updatedDto = await _orderService.UpdateOrderAsync(id, orderDto);
 
         return Ok(updatedDto);
     }

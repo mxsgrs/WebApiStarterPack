@@ -1,4 +1,4 @@
-﻿namespace Starter.Store.WebApi.OrderFeature.Presentation;
+﻿namespace Starter.Store.WebApi.OrderFeature.Application;
 
 public record OrderDto
 {

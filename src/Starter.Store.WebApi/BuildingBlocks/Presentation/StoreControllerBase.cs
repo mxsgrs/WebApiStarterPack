@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Starter.Store.WebApi.Utilities;
+namespace Starter.Store.WebApi.BuildingBlocks.Presentation;
 
 [ApiController]
 [Route("api/store/[controller]")]

@@ -1,4 +1,4 @@
-﻿namespace Starter.Store.WebApi.OrderFeature.Persistance;
+﻿namespace Starter.Store.WebApi.OrderFeature.Infrastructure;
 
 public interface IOrderRepository
 {

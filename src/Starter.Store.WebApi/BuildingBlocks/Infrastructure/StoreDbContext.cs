@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Starter.Store.WebApi.Utilities;
+namespace Starter.Store.WebApi.BuildingBlocks.Infrastructure;
 
 public class StoreDbContext : DbContext
 {

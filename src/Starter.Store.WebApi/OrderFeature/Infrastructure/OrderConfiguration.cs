@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Starter.Store.WebApi.OrderFeature.Persistance;
+namespace Starter.Store.WebApi.OrderFeature.Infrastructure;
 
 public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {

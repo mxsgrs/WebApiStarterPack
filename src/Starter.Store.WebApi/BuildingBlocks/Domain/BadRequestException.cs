@@ -1,4 +1,4 @@
-﻿namespace Starter.Store.WebApi.Utilities;
+﻿namespace Starter.Store.WebApi.BuildingBlocks.Domain;
 
 public class BadRequestException : Exception
 {

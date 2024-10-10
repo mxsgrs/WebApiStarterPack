@@ -8,6 +8,8 @@ public class Order : IAggregateRoot
     public OrderStatus Status { get; private set; }
     public DateTime CreationDate { get; private set; }
 
+    private Order() { }
+
     public Order(OrderId id, UserId userId, decimal totalAmount)
     {
         if (id.Value == Guid.Empty)

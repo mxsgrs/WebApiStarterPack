@@ -1,6 +1,6 @@
 ﻿namespace Starter.Store.WebApi.BuildingBlocks.Infrastructure;
 
-public class StoreDbContext : DbContext
+public partial class StoreDbContext : DbContext
 {
     public StoreDbContext(DbContextOptions<StoreDbContext> options)
         : base(options)
@@ -18,5 +18,9 @@ public class StoreDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new OrderConfiguration());
+
+        OnModelCreatingPartial(modelBuilder);
     }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

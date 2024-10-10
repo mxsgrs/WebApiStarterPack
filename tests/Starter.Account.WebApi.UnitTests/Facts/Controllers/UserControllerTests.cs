@@ -11,8 +11,7 @@ public class UserControllerTests : IClassFixture<SharedFixture>
     {
         _mapperMock = new Mock<IMapper>();
         _userRepositoryMock = new Mock<IUserRepository>();
-        _controller = new UserController(_mapperMock.Object, sharedFixture.AppContextAccessor, 
-            _userRepositoryMock.Object);
+        _controller = new UserController(_mapperMock.Object, _userRepositoryMock.Object);
         _sharedFixture = sharedFixture;
     }
 

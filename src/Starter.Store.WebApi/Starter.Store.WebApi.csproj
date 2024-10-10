@@ -20,9 +20,4 @@
     <ProjectReference Include="..\Starter.Store.Application\Starter.Store.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Endpoints\OrderEndpoints\GetOrder\" />
-    <Folder Include="Endpoints\OrderEndpoints\UpdateOrder\" />
-  </ItemGroup>
-
 </Project>

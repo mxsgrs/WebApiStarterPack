@@ -1,10 +1,9 @@
 ﻿namespace Starter.Account.WebApi.Controllers;
 
-public class UserController(IMapper mapper, IAppContextAccessor appContextAccessor, IUserRepository userRepository) 
+public class UserController(IMapper mapper, IUserRepository userRepository) 
     : AccountControllerBase(mapper)
 {
     private readonly IMapper _mapper = mapper;
-    private readonly IAppContextAccessor _appContextAccessor = appContextAccessor;
     private readonly IUserRepository _userRepository = userRepository;
 
     [HttpGet("{id}")]
